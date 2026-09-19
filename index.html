@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dhyan Soni · Engineering Portfolio</title>
+<!-- If you change your name or headline in content.js, update the title and description here too:
+     they're what Google and link previews show (those don't run the page's JavaScript). -->
+<meta name="description" content="Dhyan Soni: Waterloo Mechanical Engineering student and founder of Turner Fenton Rocketry. Aerospace hardware, avionics, composites and manufacturing. Goldeneye reached 12,327 ft at Mach 1.17.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dhyan Soni · Engineering Portfolio">
+<meta property="og:description" content="Mechanical Engineering at Waterloo. Founder of Turner Fenton Rocketry. Goldeneye: 12,327 ft, Mach 1.17.">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#0d1f35">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230d1f35'/%3E%3Cpath d='M14 46 L32 12 L50 46 L32 38 Z' fill='%23ff7f42'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+  /* apply a saved light/dark choice before first paint (no flash) */
+  try { var t = localStorage.getItem("portfolio-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" id="brand" href="#top">D. Soni</a>
+    <nav id="nav" aria-label="Sections"></nav>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark theme" title="Light / dark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</div>
+
+<main id="main">
+  <div id="app">
+    <noscript>
+      <div class="noscript">
+        <h1>Dhyan Soni</h1>
+        <p>Mechanical Engineering student at the University of Waterloo and founder of the Turner Fenton Rocketry Association. This portfolio needs JavaScript to display; please enable it.</p>
+      </div>
+    </noscript>
+  </div>
+</main>
+
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
