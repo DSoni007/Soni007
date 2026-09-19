@@ -112,9 +112,15 @@
   }
 
   /* ---------- WORK */
-  function media(p) {
+  // Optional per-photo crop (imageRatio / imagePosition in content.js). Only plain
+  // values such as "4 / 5" or "50% 0%" are accepted.
+  function cropValue(v, fallback) {
+    return typeof v === "string" && /^[\w.\s%\/-]+$/.test(v) ? v : fallback;
+  }
+  function media(p, ratio) {
     if (!p.image) return null;
-    return h("figure", { class: "media" }, [h("img", { src: safeUrl(p.image), alt: p.imageAlt || "", loading: "lazy" })]);
+    var style = "aspect-ratio:" + cropValue(p.imageRatio, ratio || "16 / 10") + ";object-position:" + cropValue(p.imagePosition, "50% 50%");
+    return h("figure", { class: "media" }, [h("img", { src: safeUrl(p.image), alt: p.imageAlt || "", loading: "lazy", style: style })]);
   }
   function linkButtons(links) {
     if (!links || !links.length) return null;
@@ -128,7 +134,15 @@
   }
 
   function feature(p) {
-    return h("article", { class: "feature" }, [
+    // With a photo: photo on the right, facts pinned to the bottom of the text column.
+    // Without one: the facts take the right-hand column instead.
+    var hasPhoto = !!p.image;
+    var facts = p.facts && p.facts.length
+      ? h("dl", { class: "facts" }, p.facts.map(function (f) {
+          return h("div", {}, [h("dt", { text: f.label }), h("dd", { text: f.value })]);
+        }))
+      : null;
+    return h("article", { class: "feature" + (hasPhoto ? " has-photo" : "") }, [
       h("div", { class: "feature-main" }, [
         p.kicker ? h("p", { class: "kicker", text: p.kicker }) : null,
         h("h3", { text: p.title }),
@@ -136,14 +150,10 @@
         list(p.highlights, "dash"),
         tags(p.tags),
         linkButtons(p.links),
+        hasPhoto ? facts : null,
       ]),
       h("div", { class: "feature-side" }, [
-        media(p),
-        p.facts && p.facts.length
-          ? h("dl", { class: "facts" }, p.facts.map(function (f) {
-              return h("div", {}, [h("dt", { text: f.label }), h("dd", { text: f.value })]);
-            }))
-          : null,
+        hasPhoto ? media(p, "4 / 5") : facts,
       ]),
     ]);
   }

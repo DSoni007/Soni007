@@ -67,11 +67,15 @@ window.PORTFOLIO = {
           { label: "Documentation", value: "144-page design report" },
         ],
 
-        // Optional photo. Put the file in the assets/ folder and use its name:
-        //   image: "assets/goldeneye.jpg",
-        //   imageAlt: "Goldeneye on the pad at Launch Canada 2026",
-        image: "",
-        imageAlt: "",
+        // Photo: put the file in the assets/ folder and use its name here.
+        // Leave image: "" for no photo.
+        image: "assets/goldeneye-launch.jpg",
+        imageAlt: "Goldeneye lifting off, trailing a tall column of white smoke above the tree line",
+        // Optional crop controls (these are the values in use).
+        //   imageRatio    = width / height of the frame, e.g. "4 / 5" (portrait) or "16 / 10" (landscape)
+        //   imagePosition = which part stays in frame: "50% 0%" top centre, "50% 50%" middle
+        imageRatio: "4 / 5",
+        imagePosition: "50% 0%",
 
         // Optional buttons, e.g. { label: "Design report (PDF)", url: "assets/goldeneye-report.pdf" }
         links: [],

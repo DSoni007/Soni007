@@ -26,6 +26,9 @@ Add `featured: true` to make it a big block instead of a card.
 **Add a photo to a project**
 1. Put the image in the `assets/` folder (e.g. `assets/goldeneye.jpg`; keep it under ~500 KB).
 2. In the project, set `image: "assets/goldeneye.jpg"` and a short `imageAlt`.
+3. Optional: change the crop with `imageRatio` (`"4 / 5"` portrait, `"16 / 10"` landscape) and
+   `imagePosition` (`"50% 0%"` keeps the top of the photo in frame, `"50% 50%"` the middle).
+   Photos taken on a phone often carry your GPS location, so ask Claude to resize and clean them first.
 
 **Add a job** — copy a block inside `experience.items`. **Add a skill** — add `"Name",` to a list.
 

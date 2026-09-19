@@ -159,8 +159,10 @@ ul { padding: 0; list-style: none; }
   padding: clamp(20px, 3.5vw, 40px); margin-bottom: clamp(14px, 2vw, 20px);
   background: var(--surface); border: 1px solid var(--ink);
 }
-@media (max-width: 800px) { .feature { grid-template-columns: minmax(0, 1fr); } }
+.feature.has-photo { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+@media (max-width: 800px) { .feature, .feature.has-photo { grid-template-columns: minmax(0, 1fr); } }
 .feature-main { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+.feature-main > .facts { align-self: stretch; margin-top: auto; }
 .feature h3 { font: 800 clamp(2.8rem, 7vw, 5rem)/.9 var(--f-display); text-transform: uppercase; }
 .feature-side { display: flex; flex-direction: column; gap: 1.25rem; }
 .facts { border-top: 1px solid var(--ink); }
