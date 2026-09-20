@@ -30,6 +30,14 @@ Add `featured: true` to make it a big block instead of a card.
    `imagePosition` (`"50% 0%"` keeps the top of the photo in frame, `"50% 50%"` the middle).
    Photos taken on a phone often carry your GPS location, so ask Claude to resize and clean them first.
 
+**The Goldeneye photo carousel and video** (in the featured project in `content.js`)
+- *Add a photo:* put it in `assets/goldeneye/` (about 1400 px on the long side; iPhone HEIC files need converting
+  and often need rotating, so ask Claude), then copy one `{ src: ..., caption: ..., alt: ... }` line in `gallery`.
+  Photos show in the order listed. `gallery: []` hides the carousel.
+- *Swap the video:* replace `assets/goldeneye/launch.mp4`, or point `video.src` at a new file. Use H.264 `.mp4`
+  (plays everywhere) and keep it under ~25 MB. Set `video.ratio` to `"9 / 16"` for a phone video held upright
+  or `"16 / 9"` for widescreen. `video.src: ""` hides it.
+
 **Change your headshot** — replace `assets/headshot.jpg` with a new square photo (at least ~600 px wide; it's shown large on desktop),
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
 Set `photo: ""` to hide it.

@@ -37,19 +37,19 @@ window.PORTFOLIO = {
     photoPosition: "50% 50%",
 
     tagline: "Building toward Canada's sovereign aerospace capability.",
-    intro:
-      "I founded the Turner Fenton Rocketry Association and led it to become the first high school team at Launch Canada. " +
-      "Goldeneye flew to 12,327 ft at Mach 1.17. I design, build and document flight hardware, from CAD to the shop floor.",
+    // Paragraph under the tagline. Leave "" to hide it.
+    intro: "",
 
-    // The numbers box on the right. Add / remove rows freely (4 looks best).
+    // The numbers box. It is hidden while stats is empty. To bring it back, fill it in, for example:
+    //   stats: [
+    //     { value: "12,327", unit: "ft",      label: "Apogee · Goldeneye, LC 2026" },
+    //     { value: "1.17",   unit: "Mach",    label: "Max velocity" },
+    //     { value: "84",     unit: "members", label: "Team led" },
+    //     { value: "4",      unit: "rockets", label: "Competition-level builds" },
+    //   ],
     statsTitle: "Flight & team data",
     statsNote: "TFRA · 2024–26",
-    stats: [
-      { value: "12,327", unit: "ft",      label: "Apogee · Goldeneye, LC 2026" },
-      { value: "1.17",   unit: "Mach",    label: "Max velocity" },
-      { value: "84",     unit: "members", label: "Team led" },
-      { value: "4",      unit: "rockets", label: "Competition-level builds" },
-    ],
+    stats: [],
   },
 
   /* ---------- WORK ------------------------------------------------- */
@@ -75,15 +75,51 @@ window.PORTFOLIO = {
           { label: "Documentation", value: "144-page design report" },
         ],
 
-        // Photo: put the file in the assets/ folder and use its name here.
-        // Leave image: "" for no photo.
-        image: "assets/goldeneye-launch.jpg",
-        imageAlt: "Goldeneye lifting off, trailing a tall column of white smoke above the tree line",
-        // Optional crop controls (these are the values in use).
-        //   imageRatio    = width / height of the frame, e.g. "4 / 5" (portrait) or "16 / 10" (landscape)
-        //   imagePosition = which part stays in frame: "50% 0%" top centre, "50% 50%" middle
-        imageRatio: "4 / 5",
-        imagePosition: "50% 0%",
+        // VIDEO: plays beside the summary. Put the .mp4 in assets/goldeneye/.
+        //   ratio  = width / height of the video ("9 / 16" is a phone video held upright; "16 / 9" is widescreen)
+        //   poster = optional still image shown before it plays (e.g. "assets/goldeneye/poster.jpg")
+        //   Leave src: "" to hide the video.
+        video: {
+          src: "assets/goldeneye/launch.mp4",
+          ratio: "9 / 16",
+          poster: "assets/goldeneye/launch-poster.jpg",
+          caption: "Flight video",
+        },
+
+        // PHOTO CAROUSEL: to add a photo, copy one line, change the file name, and describe it.
+        //   src     = file in assets/goldeneye/ (about 1400 px on the long side is plenty)
+        //   alt     = what the photo shows, for screen readers
+        //   caption = short label under the photo (optional, "" for none)
+        // Photos appear in the order listed. Leave the list empty ([]) to hide the carousel.
+        gallery: [
+          { src: "assets/goldeneye/01-launch.jpg",           caption: "Goldeneye lifting off",
+            alt: "Goldeneye lifting off, trailing a tall column of white smoke above the tree line" },
+          { src: "assets/goldeneye/02-team.jpg",             caption: "The team at Launch Canada 2026",
+            alt: "Seven team members posing together at Launch Canada 2026, one holding a red rocket nose cone" },
+          { src: "assets/goldeneye/03-tracking.jpg",         caption: "Tracking a flight from the field",
+            alt: "Team members on the launch field looking up, one holding a Yagi antenna and others holding phones and a radio" },
+          { src: "assets/goldeneye/04-on-the-rail.jpg",      caption: "On the launch rail",
+            alt: "A red rocket beside a launch rail, seen from below against a cloudy sky" },
+          { src: "assets/goldeneye/05-prep-table.jpg",       caption: "Pre-flight prep at the launch site",
+            alt: "A rocket lying on a table under a tent at the launch site, with paperwork and a red tag" },
+          { src: "assets/goldeneye/06-fin-fitting.jpg",      caption: "Fin and aft fitting on the airframe",
+            alt: "A dark composite airframe on a workbench with a green fiberglass fin and an aluminum ring at the aft end" },
+          { src: "assets/goldeneye/07-aluminum-part.jpg",    caption: "Machined aluminum part",
+            alt: "A tapered, machined aluminum part with a threaded end lying on a wooden workbench" },
+          { src: "assets/goldeneye/08-avionics-sled.jpg",    caption: "Avionics sled",
+            alt: "An avionics sled: threaded rods and fiberglass plates holding a small battery and a green terminal block" },
+          { src: "assets/goldeneye/09-avionics-board.jpg",   caption: "Avionics circuit board",
+            alt: "A green avionics circuit board with a microcontroller, an SD card slot and several connectors" },
+          { src: "assets/goldeneye/10-gps-tracker.jpg",      caption: "GPS tracker and support boards",
+            alt: "A GPS tracker with its antenna beside two small green circuit boards on a black surface" },
+          { src: "assets/goldeneye/11-airframe-hardware.jpg", caption: "Hardware detail on the airframe",
+            alt: "A close-up of a metal fitting with a hex-socket screw on a red composite tube" },
+        ],
+
+        // A single photo instead of the video (used only when there is no video):
+        //   image: "assets/some-photo.jpg", imageAlt: "...", imageRatio: "4 / 5", imagePosition: "50% 0%"
+        image: "",
+        imageAlt: "",
 
         // Optional buttons, e.g. { label: "Design report (PDF)", url: "assets/goldeneye-report.pdf" }
         links: [],

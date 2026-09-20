@@ -90,7 +90,7 @@
       : null;
 
     return h("header", { class: "hero", id: "top" }, [
-      h("div", { class: "wrap hero-in" }, [
+      h("div", { class: "wrap hero-in" + (stats.length ? " has-spec" : "") }, [
         h("div", { class: "hero-name" }, [
           x.eyebrow ? h("p", { class: "eyebrow", text: x.eyebrow }) : null,
           h("h1", { "aria-label": s.name }, words.map(function (w) { return h("span", { class: "nm", "aria-hidden": "true", text: w }); })),
@@ -141,16 +141,112 @@
     return h("ul", { class: "tags" }, t.map(function (x) { return h("li", { class: "tag", text: x }); }));
   }
 
+  /* ---------- video + photo carousel (used inside the featured project) */
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  function videoBlock(p) {
+    var v = p.video;
+    if (!v || !v.src) return null;
+    var ratio = cropValue(v.ratio, "16 / 9");
+    var parts = ratio.split("/");
+    var portrait = parts.length === 2 && parseFloat(parts[0]) < parseFloat(parts[1]);
+    var el = h("video", {
+      controls: "controls", playsinline: "playsinline", preload: "metadata",
+      poster: v.poster ? safeUrl(v.poster) : null,
+      src: safeUrl(v.src) + (v.poster ? "" : "#t=0.1"),    // no poster: the #t nudges phones into showing a first frame
+      "aria-label": v.caption || ((p.title || "Project") + " video"),
+      style: "aspect-ratio:" + ratio,
+    });
+    var box = h("figure", { class: "vid " + (portrait ? "portrait" : "landscape") }, [
+      el,
+      v.caption ? h("figcaption", { text: v.caption }) : null,
+    ]);
+    // once the real dimensions are known, trust them over the ratio written in content.js
+    el.addEventListener("loadedmetadata", function () {
+      if (!el.videoWidth || !el.videoHeight) return;
+      el.style.aspectRatio = el.videoWidth + " / " + el.videoHeight;
+      box.className = "vid " + (el.videoHeight > el.videoWidth ? "portrait" : "landscape");
+    });
+    return box;
+  }
+
+  function gallery(p) {
+    var g = (p.gallery || []).filter(function (it) { return it && it.src; });
+    if (!g.length) return null;
+    var n = g.length, label = (p.title || "Project") + " photos";
+    var track = h("div", { class: "g-track", tabindex: "0", role: "group", "aria-label": label }, g.map(function (it, i) {
+      return h("figure", { class: "g-item" }, [
+        h("img", { src: safeUrl(it.src), alt: it.alt || "", loading: i < 3 ? "eager" : "lazy", decoding: "async" }),
+        it.caption ? h("figcaption", { text: it.caption }) : null,
+      ]);
+    }));
+    var count = h("span", { class: "g-count", text: "01 / " + pad2(n) });
+    var prev = h("button", { class: "g-btn", type: "button", "aria-label": "Previous photo", text: "←" });
+    var next = h("button", { class: "g-btn", type: "button", "aria-label": "Next photo", text: "→" });
+    var box = h("div", { class: "gallery", role: "region", "aria-roledescription": "carousel", "aria-label": label }, [
+      h("div", { class: "g-bar" }, [h("span", { text: "Photos" }), count, h("div", { class: "g-nav" }, [prev, next])]),
+      track,
+    ]);
+    wireGallery(track, prev, next, count, n);
+    return box;
+  }
+
+  // Buttons, counter and swipe/scroll all share one scrolling strip, so nothing can get out of sync.
+  function wireGallery(track, prev, next, count, n) {
+    var items = track.children;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function startOf(i) { return items[i].getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft; }
+    function atEnd() { return track.scrollLeft + track.clientWidth >= track.scrollWidth - 4; }
+    function leftIndex() {                 // the photo sitting at (or just past) the left edge
+      var x = track.scrollLeft + 8, idx = 0;
+      for (var i = 0; i < n; i++) { if (startOf(i) <= x) idx = i; else break; }
+      return idx;
+    }
+    function update() {                    // counter shows which photos are on screen, e.g. "02–03 / 11"
+      var first = leftIndex(), last = first, edge = track.scrollLeft + track.clientWidth - 24;
+      for (var i = first + 1; i < n; i++) { if (startOf(i) < edge) last = i; else break; }
+      count.textContent = pad2(first + 1) + (last > first ? "–" + pad2(last + 1) : "") + " / " + pad2(n);
+      prev.disabled = track.scrollLeft <= 4;
+      next.disabled = atEnd();
+    }
+    var wanted = null, settle = null;      // remembers where a slide in progress is heading, so quick clicks add up
+    function step(dir) {
+      var base = wanted !== null ? wanted : leftIndex();
+      wanted = Math.max(0, Math.min(n - 1, base + dir));
+      track.scrollTo({ left: startOf(wanted), behavior: reduce ? "auto" : "smooth" });
+      clearTimeout(settle);
+      settle = setTimeout(function () { wanted = null; update(); }, 700);
+    }
+    prev.addEventListener("click", function () { step(-1); });
+    next.addEventListener("click", function () { step(1); });
+    var ticking = false;
+    track.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; update(); });
+    }, { passive: true });
+    window.addEventListener("resize", update);
+    for (var i = 0; i < items.length; i++) {
+      var im = items[i].querySelector("img");
+      if (im) im.addEventListener("load", update);
+    }
+    update();
+  }
+
   function feature(p) {
-    // With a photo: photo on the right, facts pinned to the bottom of the text column.
-    // Without one: the facts take the right-hand column instead.
-    var hasPhoto = !!p.image;
+    // Right-hand column: the video if there is one, else a single photo, else the facts.
+    // When that column holds media, the facts drop to the bottom of the text column instead.
+    // The photo carousel runs full width underneath.
+    var video = videoBlock(p);
+    var photo = video ? null : media(p, "4 / 5");
+    var hasSideMedia = !!(video || photo);
     var facts = p.facts && p.facts.length
       ? h("dl", { class: "facts" }, p.facts.map(function (f) {
           return h("div", {}, [h("dt", { text: f.label }), h("dd", { text: f.value })]);
         }))
       : null;
-    return h("article", { class: "feature" + (hasPhoto ? " has-photo" : "") }, [
+    var carousel = gallery(p);
+    return h("article", { class: "feature" + (hasSideMedia ? " has-side-media" : "") }, [
       h("div", { class: "feature-main" }, [
         p.kicker ? h("p", { class: "kicker", text: p.kicker }) : null,
         h("h3", { text: p.title }),
@@ -158,11 +254,10 @@
         list(p.highlights, "dash"),
         tags(p.tags),
         linkButtons(p.links),
-        hasPhoto ? facts : null,
+        hasSideMedia ? facts : null,
       ]),
-      h("div", { class: "feature-side" }, [
-        hasPhoto ? media(p, "4 / 5") : facts,
-      ]),
+      h("div", { class: "feature-side" }, [video || photo || facts]),
+      carousel ? h("div", { class: "feature-media" }, [carousel]) : null,
     ]);
   }
 
