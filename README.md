@@ -61,6 +61,9 @@ A card with only a summary and tags has no arrow.
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
 Set `photo: ""` to hide it.
 
+**The extra hero button** ("Hear me speak") — `hero.extraButton` has a `label` and a `url`; it sits beside "Get in touch" and
+"See the work" and opens the link in a new tab. Change either freely, or set `url: ""` to hide the button.
+
 **The typing line** (between the top of the page and Work) — edit the `typing.lines` list to change what gets typed;
 they play in order on a loop. `typing.speed` is milliseconds per letter and `typing.hold` is how long a finished
 line stays up. `typing.show: false` hides the whole thing. Visitors who ask their device for reduced motion see

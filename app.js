@@ -102,6 +102,9 @@
           h("div", { class: "actions" }, [
             hasContact ? h("button", { class: "btn btn-primary", type: "button", "data-contact-open": "1", "aria-haspopup": "dialog" }, ["Get in touch"]) : null,
             C.work && C.work.show !== false ? h("a", { class: "btn", href: "#work" }, ["See the work"]) : null,
+            x.extraButton && x.extraButton.url
+              ? h("a", { class: "btn", href: safeUrl(x.extraButton.url), target: "_blank", rel: "noopener" }, [x.extraButton.label || "Learn more"])
+              : null,
           ]),
         ]),
         stats.length

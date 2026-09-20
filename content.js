@@ -40,6 +40,10 @@ window.PORTFOLIO = {
     // Paragraph under the tagline. Leave "" to hide it.
     intro: "",
 
+    // A third button beside "Get in touch" and "See the work". It opens the link in a new tab.
+    // Change the label or the link freely; leave url: "" to hide the button.
+    extraButton: { label: "Hear me speak", url: "https://www.youtube.com/watch?v=pYqtLODlbcM" },
+
     // The numbers box. It is hidden while stats is empty. To bring it back, fill it in, for example:
     //   stats: [
     //     { value: "12,327", unit: "ft",      label: "Apogee · Goldeneye, LC 2026" },
@@ -322,11 +326,11 @@ window.PORTFOLIO = {
         role: "Drafting Engineer",
         org: "Launch Canada Turbopump Project",
         place: "",
-        dates: "",          // add the dates, e.g. "Sep 2025 – Jun 2026"; the date line stays hidden while this is empty
+        dates: "Dec 2024 – Present",
         bullets: [
-          "Created engineering drawings for complex turbomachinery using OnShape and adhering to GD&T Standards.",
-          "Maintained version control and component databases using Excel.",
-          "Created promotional material for the project using Canva.",
+          "Created engineering drawings from complex turbomachinery components on OnShape.",
+          "Maintained version control and component databases on Excel.",
+          "Designed promotional material and information packages for the development program, using Canva.",
         ],
       },
       {
