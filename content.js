@@ -52,6 +52,20 @@ window.PORTFOLIO = {
     stats: [],
   },
 
+  /* ---------- TYPING LINE (between the top of the page and Work) --- */
+  typing: {
+    show: true,
+    // Typed out one after another, on a loop. Add, remove or reorder lines freely.
+    lines: [
+      "I design rockets.",
+      "I lead teams.",
+      "I fly planes.",
+      "I build cool sh*t.",
+    ],
+    speed: 70,     // milliseconds per letter: smaller = faster typing
+    hold: 1800,    // how long a finished line stays on screen before it is erased (milliseconds)
+  },
+
   /* ---------- WORK ------------------------------------------------- */
   work: {
     show: true,

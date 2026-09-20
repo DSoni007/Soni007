@@ -119,6 +119,72 @@
     ]);
   }
 
+  /* ---------- TYPING LINE (a few short lines typed out one after another) */
+  function typingLines() {
+    var t = C.typing;
+    if (!t || t.show === false) return [];
+    return (t.lines || []).filter(function (s) { return typeof s === "string" && s; });
+  }
+
+  function typingLine() {
+    var lines = typingLines();
+    if (!lines.length) return null;
+    return h("section", { class: "typer", id: "typer", "aria-label": "A few things about me" }, [
+      h("div", { class: "wrap" }, [
+        // the moving text is decoration; screen readers get the whole list instead
+        h("p", { class: "typer-line", "aria-hidden": "true" }, [h("span", { class: "typer-text" }), h("span", { class: "typer-caret" })]),
+        h("ul", { class: "sr-only" }, lines.map(function (s) { return h("li", { text: s }); })),
+      ]),
+    ]);
+  }
+
+  function initTyping() {
+    var root = document.getElementById("typer");
+    if (!root) return;
+    var t = C.typing || {}, lines = typingLines();
+    var speed = Math.max(20, Number(t.speed) || 70), hold = Math.max(400, Number(t.hold) || 1800);
+    var text = root.querySelector(".typer-text");
+
+    // people who ask their device for less motion get every line at once, standing still
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var line = root.querySelector(".typer-line");
+      line.textContent = "";
+      lines.forEach(function (s) { line.appendChild(h("span", { class: "typer-static", text: s })); });
+      return;
+    }
+
+    var i = 0, n = 0, erasing = false, timer = null, on = false;
+    function later(ms) { timer = setTimeout(step, ms); }
+    function step() {
+      if (!on) return;
+      var full = lines[i];
+      root.classList.add("typing");                      // caret stays solid while letters are moving
+      if (!erasing) {
+        n++;
+        text.textContent = full.slice(0, n);
+        if (n >= full.length) { erasing = true; root.classList.remove("typing"); later(hold); }
+        else later(speed * (0.7 + Math.random() * 0.6));  // a little unevenness, like a real typist
+      } else {
+        n--;
+        text.textContent = full.slice(0, n);
+        if (n <= 0) { erasing = false; i = (i + 1) % lines.length; root.classList.remove("typing"); later(450); }
+        else later(speed * 0.35);
+      }
+    }
+    function start() { if (!on) { on = true; later(400); } }
+    function stop() { on = false; clearTimeout(timer); root.classList.remove("typing"); }
+
+    // only run while the section is on screen (and never rely on the browser's "on screen" signal alone)
+    if ("IntersectionObserver" in window) {
+      var reported = false;
+      new IntersectionObserver(function (entries) {
+        reported = true;
+        if (entries[0].isIntersecting) start(); else stop();
+      }, { threshold: 0.2 }).observe(root);
+      setTimeout(function () { if (!reported) start(); }, 1500);
+    } else { start(); }
+  }
+
   /* ---------- WORK */
   // Optional per-photo crop (imageRatio / imagePosition in content.js). Only plain
   // values such as "4 / 5" or "50% 0%" are accepted.
@@ -481,8 +547,9 @@
   initTheme();
   try {
     app.textContent = "";
-    [hero(), work(), about(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    [hero(), typingLine(), work(), about(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
     initContactDialog();
+    initTyping();
     buildNav();
     structuredData();
     if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }

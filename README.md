@@ -42,6 +42,11 @@ Add `featured: true` to make it a big block instead of a card.
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
 Set `photo: ""` to hide it.
 
+**The typing line** (between the top of the page and Work) — edit the `typing.lines` list to change what gets typed;
+they play in order on a loop. `typing.speed` is milliseconds per letter and `typing.hold` is how long a finished
+line stays up. `typing.show: false` hides the whole thing. Visitors who ask their device for reduced motion see
+all the lines at once, standing still.
+
 **The "Get in touch" pop-up** — it lists whatever is set in `contact` (email, LinkedIn, résumé).
 Change its heading and note with `contact.dialogTitle` and `contact.dialogNote`.
 

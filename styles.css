@@ -16,6 +16,7 @@
   --f-display: "Big Shoulders Display", "Arial Narrow", "Helvetica Neue Condensed", Impact, sans-serif;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --f-serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;   /* the typed lines */
 
   --max: 1120px;
   --gutter: clamp(16px, 4vw, 40px);
@@ -154,6 +155,24 @@ ul { padding: 0; list-style: none; }
 .spec dd { display: flex; align-items: baseline; gap: .4rem; white-space: nowrap; }
 .spec .v { font: 800 clamp(2rem, 4.4vw, 2.9rem)/1 var(--f-display); font-variant-numeric: tabular-nums; }
 .spec .u { font: 500 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+
+/* ---------- TYPING LINE ---------- */
+.typer { padding-block: clamp(48px, 8vw, 96px); border-bottom: 1px solid var(--line); }
+.typer-line {
+  min-height: 1.2em; color: var(--ink); letter-spacing: -.005em;
+  font: 600 clamp(2rem, 13vw, 5.25rem)/1.15 var(--f-serif);   /* the longest line is 6.55 x the font size wide, so this always fits on one row */
+}
+/* the insertion point: blinks when idle, stays solid while letters are moving */
+.typer-caret {
+  display: inline-block; width: .055em; min-width: 3px; height: .9em; margin-left: .07em; vertical-align: -.06em;
+  background: var(--accent); animation: typer-blink 1.05s steps(1) infinite;
+}
+.typer.typing .typer-caret { animation: none; }
+@keyframes typer-blink { 50% { opacity: 0; } }
+.typer-static { display: block; }
+.typer-static + .typer-static { margin-top: .2em; }
+@media (prefers-reduced-motion: reduce) { .typer-caret { animation: none; } }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ---------- SECTIONS ---------- */
 .sec { padding-block: clamp(48px, 7vw, 88px); scroll-margin-top: 56px; }
