@@ -524,7 +524,8 @@
         if (g !== p.gen) return null;
         var base = page.getViewport({ scale: 1 });
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
-        var vp = page.getViewport({ scale: ((p.el.clientWidth || 600) / base.width) * dpr });
+        v.drawnWidth = p.el.clientWidth || 600;
+        var vp = page.getViewport({ scale: (v.drawnWidth / base.width) * dpr });
         p.el.style.aspectRatio = base.width + " / " + base.height;
         p.canvas.width = Math.floor(vp.width);
         p.canvas.height = Math.floor(vp.height);
@@ -576,7 +577,9 @@
       v.status.textContent = "Loading…";
       v.scroller.scrollTop = 0;
       loadPdfJs().then(function (lib) {
-        return lib.getDocument({ url: safeUrl(url), disableAutoFetch: true, rangeChunkSize: 131072 }).promise;
+        // disableStream + disableAutoFetch: fetch only the pieces of the file that the pages on screen need,
+        // instead of streaming the whole thing in the background
+        return lib.getDocument({ url: safeUrl(url), disableStream: true, disableAutoFetch: true, rangeChunkSize: 131072 }).promise;
       }).then(function (pdf) {
         if (v.url !== url) return null;
         v.pdf = pdf;
@@ -616,7 +619,9 @@
       if (e.key === "Enter") { goTo(parseInt(v.input.value, 10) || v.current); v.scroller.focus({ preventScroll: true }); }
     });
     window.addEventListener("resize", function () {
-      if (!v.dlg.open) return;
+      if (!v.dlg.open || !v.pages.length) return;
+      // a phone's address bar sliding away only changes the height: nothing needs redrawing then
+      if (v.drawnWidth && Math.abs(v.pages[0].el.clientWidth - v.drawnWidth) < 2) { sync(); return; }
       v.releaseAll();                                       // page width changed: redraw at the new size
       sync();
     });
