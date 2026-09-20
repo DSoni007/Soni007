@@ -91,12 +91,12 @@
 
     return h("header", { class: "hero", id: "top" }, [
       h("div", { class: "wrap hero-in" }, [
-        h("div", { class: "hero-copy" }, [
+        h("div", { class: "hero-name" }, [
           x.eyebrow ? h("p", { class: "eyebrow", text: x.eyebrow }) : null,
-          h("div", { class: "hero-id" }, [
-            h("h1", { "aria-label": s.name }, words.map(function (w) { return h("span", { class: "nm", "aria-hidden": "true", text: w }); })),
-            photo,
-          ]),
+          h("h1", { "aria-label": s.name }, words.map(function (w) { return h("span", { class: "nm", "aria-hidden": "true", text: w }); })),
+        ]),
+        photo,
+        h("div", { class: "hero-text" }, [
           x.tagline ? h("p", { class: "tagline", text: x.tagline }) : null,
           x.intro ? h("p", { class: "intro", text: x.intro }) : null,
           h("div", { class: "actions" }, [
