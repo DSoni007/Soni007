@@ -2,6 +2,15 @@
 
 A plain static website. No frameworks, no build step, nothing to install.
 
+## Where the site lives
+
+- **Address:** https://dhyans.space (the old `dsoni007.github.io/Soni007` link redirects to it).
+- **Hosting:** GitHub Pages, free, publishing this repo's `main` branch. Every push goes live in about a minute.
+- **Domain name:** bought at Porkbun and renews yearly (about $26 USD; it expires 2027-09-20, so keep auto-renew on
+  or the address stops working). Its DNS records (four `A` records to GitHub plus a `www` CNAME) live in Porkbun's DNS editor.
+- **Don't delete the `CNAME` file** in this folder. It tells GitHub which domain the site belongs to.
+- **Changing domains later:** change the `CNAME` file, the two address lines at the top of `index.html`, and the DNS records.
+
 ## The 30-second version
 
 **To change anything, edit `content.js`. That's the only file you need.**

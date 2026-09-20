@@ -22,7 +22,7 @@ window.PORTFOLIO = {
     name: "Dhyan Soni",
     shortName: "D. Soni",          // shown top-left and in the footer
     location: "Toronto, ON",
-    updated: "2026-09",            // shown as "REV" in the footer — bump it when you edit
+    updated: "2026-09-20",         // shown as "REV" in the footer — bump it when you edit
   },
 
   /* ---------- HERO (top of page) ---------------------------------- */

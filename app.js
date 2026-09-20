@@ -741,6 +741,8 @@
               alumniOf: { "@type": "CollegeOrUniversity", name: "University of Waterloo" }, description: (C.hero || {}).tagline };
     if (s.location) d.homeLocation = { "@type": "Place", name: s.location };
     if (c.linkedin) d.sameAs = [c.linkedin];
+    var canon = document.querySelector('link[rel="canonical"]');   // the address lives in one place: index.html
+    if (canon && canon.href) d.url = canon.href;
     var t = document.createElement("script"); t.type = "application/ld+json"; t.textContent = JSON.stringify(d);
     document.head.appendChild(t);
   }
