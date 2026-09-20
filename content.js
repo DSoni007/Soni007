@@ -80,13 +80,15 @@ window.PORTFOLIO = {
         title: "Goldeneye",
         summary:
           "Turner Fenton Rocketry's entry at Launch Canada 2026, launched to an apogee of 12,327 ft and a maximum velocity of Mach 1.17. " +
-          "I engineered its supersonic pitot tube, avionics and aluminum boat tail, and led the team that documented the full design cycle in a 144-page report.",
+          "This rocket pushed the team to its absolute limits, and expanded our horizons further than we'd ever guessed. " +
+          "From designing custom instrumentation, taming explosive charges, and assembling microscopic electronics, " +
+          "Goldeneye was an incredibly complex, risky, and challenging endeavour.",
 
         // Label / value pairs shown beside the summary.
         facts: [
           { label: "Event",         value: "Launch Canada 2026" },
-          { label: "My scope",      value: "Pitot tube · Avionics · Boat tail" },
-          { label: "Documentation", value: "144-page design report" },
+          { label: "My scope",      value: "Hardware, software, project management" },
+          { label: "Documentation", value: "145-page design report" },
         ],
 
         // VIDEO: plays beside the summary. Put the .mp4 in assets/goldeneye/.
@@ -135,8 +137,11 @@ window.PORTFOLIO = {
         image: "",
         imageAlt: "",
 
-        // Optional buttons, e.g. { label: "Design report (PDF)", url: "assets/goldeneye-report.pdf" }
-        links: [],
+        // Buttons under the summary. The label can say how big the file is, since PDFs are slow on a phone.
+        // (The report is the original 145-page file, with its pictures compressed from 45 MB down to 7 MB.)
+        links: [
+          { label: "Design report (PDF, 7 MB)", url: "assets/goldeneye/goldeneye-final-design-report.pdf" },
+        ],
       },
 
       {
@@ -223,7 +228,7 @@ window.PORTFOLIO = {
           "Designed and wired the avionics systems for three competition rockets (Stallion, Spectre, Goldeneye).",
           "Engineered a proprietary aluminum boat tail, improving the flight performance of Goldeneye by 7–10%.",
           "Led a team of 84 members through technical development while managing financials, hiring, onboarding, outreach, and community engagement.",
-          "Ensured documentation of the design cycle, culminating in a 144-page report for Goldeneye.",
+          "Ensured documentation of the design cycle, culminating in a 145-page report for Goldeneye.",
         ],
       },
       {

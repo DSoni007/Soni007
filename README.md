@@ -37,6 +37,9 @@ Add `featured: true` to make it a big block instead of a card.
 - *Swap the video:* replace `assets/goldeneye/launch.mp4`, or point `video.src` at a new file. Use H.264 `.mp4`
   (plays everywhere) and keep it under ~25 MB. Set `video.ratio` to `"9 / 16"` for a phone video held upright
   or `"16 / 9"` for widescreen. `video.src: ""` hides it.
+- *Update the design report:* replace `assets/goldeneye/goldeneye-final-design-report.pdf` and change the size
+  in the button label under `links` (and the page count under `facts`). Big PDFs are slow on phones, so ask Claude
+  to shrink the pictures first (the report went from 45 MB to 7 MB with no visible difference).
 
 **Change your headshot** — replace `assets/headshot.jpg` with a new square photo (at least ~600 px wide; it's shown large on desktop),
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
