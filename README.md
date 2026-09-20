@@ -37,9 +37,9 @@ Add `featured: true` to make it a big block instead of a card.
 - *Swap the video:* replace `assets/goldeneye/launch.mp4`, or point `video.src` at a new file. Use H.264 `.mp4`
   (plays everywhere) and keep it under ~25 MB. Set `video.ratio` to `"9 / 16"` for a phone video held upright
   or `"16 / 9"` for widescreen. `video.src: ""` hides it.
-- *Update the design report:* replace `assets/goldeneye/goldeneye-final-design-report.pdf` and change the size
-  in the button label under `links` (and the page count under `facts`). Big PDFs are slow on phones, so ask Claude
-  to shrink the pictures first (the report went from 45 MB to 7 MB with no visible difference).
+- *Update the design report:* replace `assets/goldeneye/goldeneye-final-design-report.pdf` and change the page
+  count in the "Documentation" fact (its text opens the report in the on-page reader). Big PDFs are slow on
+  phones, so ask Claude to shrink the pictures first (the report went from 45 MB to 7 MB with no visible difference).
 
 **Change your headshot** — replace `assets/headshot.jpg` with a new square photo (at least ~600 px wide; it's shown large on desktop),
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
@@ -57,9 +57,11 @@ Change its heading and note with `contact.dialogTitle` and `contact.dialogNote`.
 
 **Hide a section** — set `show: false` on it (e.g. `about: { show: false, ... }`).
 
-**Link a PDF (design report, résumé)** — drop it in `assets/`, then add
-`links: [{ label: "Design report", url: "assets/goldeneye-report.pdf" }]` to a project,
-or set `contact.resume`. **Use a résumé copy without your phone number** — this site is public.
+**Show a PDF (design report, résumé)** — drop it in `assets/`, then either make a fact open it
+(`{ label: "Documentation", value: "…", pdf: "assets/report.pdf" }`) or add a button to a project
+(`links: [{ label: "Design report", pdf: "assets/report.pdf" }]`). Either one opens the PDF in a reader
+window on the page (no download); use `url:` instead of `pdf:` for a normal link. For a résumé, set
+`contact.resume`. **Use a résumé copy without your phone number** — this site is public.
 
 **Bump the revision** — change `site.updated` (it appears in the footer title block).
 

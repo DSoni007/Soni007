@@ -220,6 +220,20 @@ ul { padding: 0; list-style: none; }
 .facts > div { display: grid; gap: .1rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .facts dt { font: 500 .7rem var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2); }
 .facts dd { font: 700 1.3rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+/* a fact that opens something (the PDF reader, or a link): underlined, with a small tag saying what it does */
+.fact-link {
+  padding: 0; margin: 0; cursor: pointer; text-align: left; color: inherit; background: none; border: 0;
+  font: inherit; letter-spacing: inherit; text-transform: inherit;
+  text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: .2em;
+  transition: color .15s;
+}
+.fact-link::after {
+  content: "Preview"; display: inline-block; margin-left: .7em; padding: .12em .5em; vertical-align: .22em;
+  font: 500 .62rem/1.2 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+  color: var(--accent); border: 1px solid var(--accent);
+}
+a.fact-link::after { content: "Open"; }
+.fact-link:hover { color: var(--accent); }
 
 .grid { display: grid; gap: clamp(12px, 2vw, 20px); grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
 .grid + .feature, .feature + .feature { margin-top: clamp(14px, 2vw, 20px); }
@@ -352,3 +366,47 @@ ul { padding: 0; list-style: none; }
 .dlg-body h2 { font: 800 clamp(2.2rem, 7vw, 3rem)/1 var(--f-display); text-transform: uppercase; }
 .dlg-body .contact-list { width: 100%; }
 html.dlg-open { overflow: hidden; }
+
+/* ---------- PDF READER (the preview window) ---------- */
+.pdf-dlg { width: min(1040px, calc(100% - 2 * var(--gutter))); height: 92vh; height: min(92dvh, 1100px); max-height: none; }
+.pdf-dlg[open] { display: flex; flex-direction: column; }
+.pdf-head { flex-wrap: wrap; row-gap: .5rem; }
+.pdf-title { flex: 1 1 8rem; min-width: 0; overflow-wrap: anywhere; color: var(--ink); }
+.pdf-controls { display: flex; align-items: center; gap: .5rem; }
+/* desktop, one row: title | page controls | Open | Close.   phone, two rows: title + Close, then controls + Open */
+.pdf-head > .pdf-title { order: 1; }
+.pdf-head > .pdf-controls { order: 2; }
+.pdf-head > .pdf-open { order: 3; }
+.pdf-head > .dlg-close { order: 4; }
+@media (max-width: 640px) {
+  .pdf-head > .dlg-close { order: 2; }
+  .pdf-head > .pdf-controls { order: 3; }
+  .pdf-head > .pdf-open { order: 4; }
+}
+.pdf-page-box { display: flex; align-items: center; gap: .4rem; white-space: nowrap; }
+.pdf-input {
+  width: 4.4em; height: 38px; padding: 0 .3em; text-align: center; -moz-appearance: textfield; appearance: textfield;
+  font: 500 .9rem var(--f-mono); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+}
+.pdf-input::-webkit-outer-spin-button, .pdf-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pdf-total { font-variant-numeric: tabular-nums; }
+.pdf-open {
+  color: var(--ink); text-decoration: none; white-space: nowrap; padding-bottom: .1rem;
+  border-bottom: 1px solid var(--accent); transition: color .15s;
+}
+.pdf-open:hover { color: var(--accent); }
+.pdf-scroll {
+  position: relative; flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain;
+  padding: 14px 12px 28px; background: var(--bg);
+}
+.pdf-page {
+  width: min(100%, 900px); margin: 0 auto 14px; background: #fff; border: 1px solid var(--line);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, .28);
+}
+.pdf-page canvas { display: block; width: 100%; height: 100%; }
+.pdf-status { padding: 3rem 1rem; text-align: center; font: 500 .8rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.pdf-status a { color: var(--accent); }
+@media (max-width: 640px) {
+  .pdf-dlg { width: 100%; max-width: none; height: 100vh; height: 100dvh; margin: 0; border: 0; }
+  .pdf-scroll { padding-inline: 6px; }
+}

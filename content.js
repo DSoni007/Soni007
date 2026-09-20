@@ -84,11 +84,14 @@ window.PORTFOLIO = {
           "From designing custom instrumentation, taming explosive charges, and assembling microscopic electronics, " +
           "Goldeneye was an incredibly complex, risky, and challenging endeavour.",
 
-        // Label / value pairs shown beside the summary.
+        // Label / value pairs shown beside the summary. A fact can also be clickable:
+        //   pdf: "assets/x.pdf"   opens that PDF in a reader window on the page (no download)
+        //   url: "https://..."    opens a normal link in a new tab
         facts: [
           { label: "Event",         value: "Launch Canada 2026" },
-          { label: "My scope",      value: "Hardware, software, project management" },
-          { label: "Documentation", value: "145-page design report" },
+          { label: "My scope",      value: "Hardware · Software · Project management" },
+          { label: "Documentation", value: "145-page design report",
+            pdf: "assets/goldeneye/goldeneye-final-design-report.pdf", pdfTitle: "Goldeneye Final Design Report" },
         ],
 
         // VIDEO: plays beside the summary. Put the .mp4 in assets/goldeneye/.
@@ -137,11 +140,10 @@ window.PORTFOLIO = {
         image: "",
         imageAlt: "",
 
-        // Buttons under the summary. The label can say how big the file is, since PDFs are slow on a phone.
-        // (The report is the original 145-page file, with its pictures compressed from 45 MB down to 7 MB.)
-        links: [
-          { label: "Design report (PDF, 7 MB)", url: "assets/goldeneye/goldeneye-final-design-report.pdf" },
-        ],
+        // Optional buttons under the summary (none right now: the report opens from the "Documentation" fact).
+        // A button can open a link:        { label: "Read the paper", url: "https://example.com" }
+        // or open a PDF in the reader:     { label: "Design report", pdf: "assets/goldeneye/goldeneye-final-design-report.pdf" }
+        links: [],
       },
 
       {

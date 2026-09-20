@@ -202,11 +202,23 @@
     var style = "aspect-ratio:" + cropValue(p.imageRatio, ratio || "16 / 10") + ";object-position:" + cropValue(p.imagePosition, "50% 50%");
     return h("figure", { class: "media" }, [h("img", { src: safeUrl(p.image), alt: p.imageAlt || "", loading: "lazy", style: style })]);
   }
+  // A button can open a normal link (url) or the on-page PDF reader (pdf).
   function linkButtons(links) {
     if (!links || !links.length) return null;
     return h("div", { class: "actions" }, links.map(function (l) {
+      if (l.pdf) {
+        return h("button", { class: "btn", type: "button", "data-pdf": l.pdf, "data-pdf-title": l.pdfTitle || l.label, "aria-haspopup": "dialog" }, [l.label]);
+      }
       return h("a", { class: "btn", href: safeUrl(l.url), target: "_blank", rel: "noopener" }, [l.label]);
     }));
+  }
+  // A fact's value can be plain text, a link (url), or open the on-page PDF reader (pdf).
+  function factValue(f) {
+    if (f.pdf) {
+      return h("button", { class: "fact-link", type: "button", "data-pdf": f.pdf, "data-pdf-title": f.pdfTitle || f.value, "aria-haspopup": "dialog", text: f.value });
+    }
+    if (f.url) return h("a", { class: "fact-link", href: safeUrl(f.url), target: "_blank", rel: "noopener", text: f.value });
+    return f.value === undefined || f.value === null ? null : String(f.value);
   }
   function tags(t) {
     if (!t || !t.length) return null;
@@ -314,7 +326,7 @@
     var hasSideMedia = !!(video || photo);
     var facts = p.facts && p.facts.length
       ? h("dl", { class: "facts" }, p.facts.map(function (f) {
-          return h("div", {}, [h("dt", { text: f.label }), h("dd", { text: f.value })]);
+          return h("div", {}, [h("dt", { text: f.label }), h("dd", {}, [factValue(f)])]);
         }))
       : null;
     var carousel = gallery(p);
@@ -456,6 +468,199 @@
     ]);
   }
 
+  /* ---------- PDF PREVIEW: shows a PDF in a reader window on the page instead of downloading it.
+     The reader is Mozilla's pdf.js, fetched from a CDN only the first time someone opens a PDF, and only
+     the pages being looked at are downloaded and drawn. If it can't load, the visitor gets a plain
+     "open the PDF" link instead. */
+  var PDFJS_BASE = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+  var pdfLibPromise = null, pdfViewer = null;
+
+  function loadPdfJs() {
+    if (pdfLibPromise) return pdfLibPromise;
+    pdfLibPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = PDFJS_BASE + "pdf.min.js";
+      s.integrity = "sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e";   // pins the exact file
+      s.crossOrigin = "anonymous";
+      s.onload = function () {
+        if (!window.pdfjsLib) { pdfLibPromise = null; reject(new Error("the reader did not start")); return; }
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_BASE + "pdf.worker.min.js";
+        resolve(window.pdfjsLib);
+      };
+      s.onerror = function () { pdfLibPromise = null; reject(new Error("could not load the reader")); };
+      document.head.appendChild(s);
+    });
+    return pdfLibPromise;
+  }
+
+  function buildViewer() {
+    var v = { pages: [], pdf: null, url: null, current: 1 };
+    v.title = h("span", { class: "pdf-title", id: "pdf-title", text: "Document" });
+    v.prev = h("button", { class: "g-btn", type: "button", "aria-label": "Previous page", text: "←" });
+    v.next = h("button", { class: "g-btn", type: "button", "aria-label": "Next page", text: "→" });
+    v.input = h("input", { class: "pdf-input", type: "number", min: "1", value: "1", inputmode: "numeric", "aria-label": "Page number" });
+    v.total = h("span", { class: "pdf-total", text: "/ …" });
+    v.open = h("a", { class: "pdf-open", target: "_blank", rel: "noopener", text: "Open PDF ↗" });
+    v.status = h("p", { class: "pdf-status", role: "status", text: "Loading…" });
+    v.scroller = h("div", { class: "pdf-scroll", tabindex: "0", role: "region", "aria-label": "Document pages" }, [v.status]);
+    v.dlg = h("dialog", { class: "dlg pdf-dlg", "aria-labelledby": "pdf-title" }, [
+      h("div", { class: "dlg-head pdf-head" }, [
+        v.title,
+        h("div", { class: "pdf-controls" }, [v.prev, h("label", { class: "pdf-page-box" }, ["Page ", v.input, v.total]), v.next]),
+        v.open,
+        h("button", { class: "dlg-close", type: "button", "data-pdf-close": "1", text: "Close" }),
+      ]),
+      v.scroller,
+    ]);
+
+    // Every page gets a blank placeholder of the right shape up front, so the scrollbar is honest from
+    // the start. Only pages near the screen are actually drawn; the rest are cleared to save memory.
+    function render(i) {
+      var p = v.pages[i];
+      if (p.done || p.busy) return;
+      p.busy = true;
+      var g = ++p.gen;
+      v.pdf.getPage(i + 1).then(function (page) {
+        if (g !== p.gen) return null;
+        var base = page.getViewport({ scale: 1 });
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var vp = page.getViewport({ scale: ((p.el.clientWidth || 600) / base.width) * dpr });
+        p.el.style.aspectRatio = base.width + " / " + base.height;
+        p.canvas.width = Math.floor(vp.width);
+        p.canvas.height = Math.floor(vp.height);
+        p.task = page.render({ canvasContext: p.canvas.getContext("2d"), viewport: vp });
+        return p.task.promise.then(function () { if (g === p.gen) p.done = true; });
+      }).catch(function () { /* a page that was scrolled away mid-draw is cancelled on purpose */ })
+        .then(function () { if (g === p.gen) p.busy = false; });
+    }
+    function release(i) {
+      var p = v.pages[i];
+      if (!p.done && !p.busy) return;
+      p.gen++;
+      if (p.task) { try { p.task.cancel(); } catch (e) {} p.task = null; }
+      p.done = false; p.busy = false;
+      p.canvas.width = 0; p.canvas.height = 0;
+    }
+    function setCurrent(n) {
+      v.current = n;
+      if (document.activeElement !== v.input) v.input.value = String(n);
+      v.prev.disabled = n <= 1;
+      v.next.disabled = n >= v.pages.length;
+    }
+    function sync() {
+      if (!v.pages.length || !v.dlg.open) return;
+      var top = v.scroller.scrollTop, h1 = v.scroller.clientHeight, lo = top - h1, hi = top + h1 * 2, probe = top + h1 * 0.3, cur = 0;
+      for (var i = 0; i < v.pages.length; i++) {
+        var el = v.pages[i].el, y0 = el.offsetTop, y1 = y0 + el.offsetHeight;
+        if (y0 <= probe) cur = i;
+        if (y1 >= lo && y0 <= hi) render(i); else release(i);
+      }
+      setCurrent(cur + 1);
+    }
+    function goTo(n) {
+      if (!v.pages.length) return;
+      n = Math.max(1, Math.min(v.pages.length, n));
+      v.scroller.scrollTop = v.pages[n - 1].el.offsetTop - 10;
+      sync();
+    }
+    v.sync = sync;
+    v.releaseAll = function () { for (var i = 0; i < v.pages.length; i++) release(i); };
+
+    v.load = function (url) {
+      v.url = url; v.pdf = null;
+      v.pages.forEach(function (p) { p.el.remove(); });
+      v.pages = [];
+      v.total.textContent = "/ …";
+      setCurrent(1);
+      v.status.hidden = false;
+      v.status.textContent = "Loading…";
+      v.scroller.scrollTop = 0;
+      loadPdfJs().then(function (lib) {
+        return lib.getDocument({ url: safeUrl(url), disableAutoFetch: true, rangeChunkSize: 131072 }).promise;
+      }).then(function (pdf) {
+        if (v.url !== url) return null;
+        v.pdf = pdf;
+        return pdf.getPage(1).then(function (first) { return { pdf: pdf, box: first.getViewport({ scale: 1 }) }; });
+      }).then(function (info) {
+        if (!info || v.url !== url) return;
+        var ratio = info.box.width + " / " + info.box.height;
+        for (var i = 0; i < info.pdf.numPages; i++) {
+          var canvas = document.createElement("canvas");
+          var el = h("div", { class: "pdf-page", "data-page": String(i + 1), style: "aspect-ratio:" + ratio }, [canvas]);
+          v.scroller.appendChild(el);
+          v.pages.push({ el: el, canvas: canvas, done: false, busy: false, gen: 0, task: null });
+        }
+        v.status.hidden = true;
+        v.total.textContent = "/ " + info.pdf.numPages;
+        v.input.max = String(info.pdf.numPages);
+        sync();
+      }).catch(function () {
+        if (v.url !== url) return;
+        v.url = null;                                       // so opening it again tries again
+        v.status.hidden = false;
+        v.status.textContent = "The preview couldn't load. ";
+        v.status.appendChild(h("a", { href: safeUrl(url), target: "_blank", rel: "noopener", text: "Open the PDF in a new tab" }));
+      });
+    };
+
+    var ticking = false;
+    v.scroller.addEventListener("scroll", function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; sync(); });
+    }, { passive: true });
+    v.prev.addEventListener("click", function () { goTo(v.current - 1); });
+    v.next.addEventListener("click", function () { goTo(v.current + 1); });
+    v.input.addEventListener("change", function () { goTo(parseInt(v.input.value, 10) || v.current); });
+    v.input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { goTo(parseInt(v.input.value, 10) || v.current); v.scroller.focus({ preventScroll: true }); }
+    });
+    window.addEventListener("resize", function () {
+      if (!v.dlg.open) return;
+      v.releaseAll();                                       // page width changed: redraw at the new size
+      sync();
+    });
+    // close with the Close button, by clicking the dimmed area, or with Esc
+    function shut() {                                       // unlock the page straight away, not whenever the browser gets round to the close event
+      v.dlg.close();
+      document.documentElement.classList.remove("dlg-open");
+      v.releaseAll();
+    }
+    v.dlg.addEventListener("click", function (e) {
+      if (e.target === v.dlg || (e.target.closest && e.target.closest("[data-pdf-close]"))) shut();
+    });
+    v.dlg.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); shut(); } });
+    v.dlg.addEventListener("close", function () {           // also covers any other way the browser might close it
+      document.documentElement.classList.remove("dlg-open");
+      v.releaseAll();
+    });
+    return v;
+  }
+
+  function openPdf(url, titleText) {
+    if (typeof document.createElement("dialog").showModal !== "function") {   // very old browsers: just open the file
+      window.open(safeUrl(url), "_blank", "noopener");
+      return;
+    }
+    if (!pdfViewer) { pdfViewer = buildViewer(); document.body.appendChild(pdfViewer.dlg); }
+    var v = pdfViewer;
+    v.title.textContent = titleText || "Document";
+    v.open.setAttribute("href", safeUrl(url));
+    v.dlg.showModal();
+    document.documentElement.classList.add("dlg-open");
+    if (v.url !== url) v.load(url); else v.sync();
+    v.scroller.focus({ preventScroll: true });
+  }
+
+  function initPdfPreview() {
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest && e.target.closest("[data-pdf]");
+      if (!t) return;
+      e.preventDefault();
+      openPdf(t.getAttribute("data-pdf"), t.getAttribute("data-pdf-title"));
+    });
+  }
+
   /* ---------- CONTACT POP-UP (opened by the "Get in touch" button) */
   function contactDialog() {
     var links = contactLinks(); if (!links.length) return null;
@@ -555,6 +760,7 @@
     app.textContent = "";
     [hero(), typingLine(), work(), about(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
     initContactDialog();
+    initPdfPreview();
     initTyping();
     buildNav();
     structuredData();
