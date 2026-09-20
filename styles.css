@@ -242,6 +242,44 @@ a.fact-link::after { content: "Open"; }
 .card .tags { margin-top: auto; padding-top: .6rem; }
 .media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line); }
 
+/* ---------- PROJECTS THAT OPEN WITH AN ARROW (content.js: expandable: true) ---------- */
+.more-list { display: grid; gap: clamp(12px, 2vw, 20px); margin-top: clamp(28px, 4vw, 44px); }
+.more-kicker {
+  padding-bottom: .6rem; border-bottom: 1px solid var(--ink);
+  font: 500 .72rem var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2);
+}
+.more { background: var(--surface); border: 1px solid var(--line); transition: border-color .15s; }
+.more:hover, .more[open] { border-color: var(--ink); }
+.more-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(12px, 3vw, 28px); row-gap: .55rem; align-items: start;
+  padding: clamp(18px, 2.4vw, 26px); cursor: pointer; list-style: none;
+}
+.more-head::-webkit-details-marker { display: none; }
+.more-head > .kicker, .more-head > h3, .more-head > .more-sum { grid-column: 1; }
+.more-head h3 { font: 700 clamp(1.6rem, 2.6vw, 2rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.more-sum { max-width: 68ch; }
+.more-cta { grid-column: 2; grid-row: 1 / span 3; align-self: center; display: flex; align-items: center; gap: .8rem; }
+.more-words { font: 500 .72rem var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2); }
+.more-words .on-open, .more[open] .more-words .on-closed { display: none; }
+.more[open] .more-words .on-open { display: inline; }
+.more-arrow {
+  display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); color: var(--ink);
+  transition: border-color .15s, color .15s;
+}
+.more-arrow::after {   /* the arrow: two sides of a square, turned to point down (and up once open) */
+  content: ""; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform .2s;
+}
+.more[open] .more-arrow::after { transform: translateY(2px) rotate(-135deg); }
+.more-head:hover .more-arrow { border-color: var(--accent); color: var(--accent); }
+.more-body { display: grid; gap: 1.25rem; padding: clamp(18px, 2.4vw, 26px); border-top: 1px solid var(--line); animation: more-in .25s ease-out; }
+@keyframes more-in { from { opacity: 0; transform: translateY(-6px); } }
+.more-body .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); column-gap: clamp(16px, 3vw, 32px); border-top: 0; }
+.more-body .facts dd { text-transform: none; }   /* keep units readable: "3,092 m", not "3,092 M" */
+.more-body .dash { max-width: 74ch; }
+.more-body .actions { margin-top: 0; }
+@media (max-width: 520px) { .more-words { display: none; } }
+
 /* ---------- VIDEO + PHOTO CAROUSEL (featured project) ---------- */
 .vid { display: grid; gap: .5rem; margin: 0; max-width: 100%; align-self: flex-end; }
 .vid video { display: block; max-width: 100%; background: #000; border: 1px solid var(--line); }

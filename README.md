@@ -32,6 +32,11 @@ Save it, refresh the page, done. (Double-click `index.html` to preview on your c
 one, change the text. There's a commented template at the bottom of the projects list.
 Add `featured: true` to make it a big block instead of a card.
 
+**Make a project open with an arrow** — add `expandable: true` to it. It then shows as a compact row (small label,
+title, one-line summary) with an arrow, and clicking it opens its `facts`, `highlights`, `tags` and `links` underneath.
+These rows sit together under a small "More projects" heading: change it with `work.moreTitle`, or set it to `""` to hide it.
+Delete the `expandable` line to turn the project back into a normal card.
+
 **Add a photo to a project**
 1. Put the image in the `assets/` folder (e.g. `assets/goldeneye.jpg`; keep it under ~500 KB).
 2. In the project, set `image: "assets/goldeneye.jpg"` and a short `imageAlt`.
@@ -62,7 +67,8 @@ all the lines at once, standing still.
 **The "Get in touch" pop-up** — it lists whatever is set in `contact` (email, LinkedIn, résumé).
 Change its heading and note with `contact.dialogTitle` and `contact.dialogNote`.
 
-**Add a job** — copy a block inside `experience.items`. **Add a skill** — add `"Name",` to a list.
+**Add a job** — copy a block inside `experience.items` (leave `dates: ""` empty and the date line is simply hidden).
+**Add a skill** — add `"Name",` to a list.
 
 **Hide a section** — set `show: false` on it (e.g. `education: { show: false, ... }`).
 

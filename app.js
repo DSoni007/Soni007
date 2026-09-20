@@ -220,6 +220,13 @@
     if (f.url) return h("a", { class: "fact-link", href: safeUrl(f.url), target: "_blank", rel: "noopener", text: f.value });
     return f.value === undefined || f.value === null ? null : String(f.value);
   }
+  // The label / value list used in the featured block and inside the rows that open with an arrow.
+  function factList(facts) {
+    if (!facts || !facts.length) return null;
+    return h("dl", { class: "facts" }, facts.map(function (f) {
+      return h("div", {}, [h("dt", { text: f.label }), h("dd", {}, [factValue(f)])]);
+    }));
+  }
   function tags(t) {
     if (!t || !t.length) return null;
     return h("ul", { class: "tags" }, t.map(function (x) { return h("li", { class: "tag", text: x }); }));
@@ -324,11 +331,7 @@
     var video = videoBlock(p);
     var photo = video ? null : media(p, "4 / 5");
     var hasSideMedia = !!(video || photo);
-    var facts = p.facts && p.facts.length
-      ? h("dl", { class: "facts" }, p.facts.map(function (f) {
-          return h("div", {}, [h("dt", { text: f.label }), h("dd", {}, [factValue(f)])]);
-        }))
-      : null;
+    var facts = factList(p.facts);
     var carousel = gallery(p);
     return h("article", { class: "feature" + (hasSideMedia ? " has-side-media" : "") }, [
       h("div", { class: "feature-main" }, [
@@ -357,10 +360,35 @@
     ]);
   }
 
+  // A project shown as a compact row with an arrow: the top stays short, and clicking it (or pressing Enter)
+  // opens the rest underneath. Built on <details>, so the keyboard works and the browser's find-in-page can open it.
+  function more(p) {
+    return h("details", { class: "more" }, [
+      h("summary", { class: "more-head" }, [
+        p.kicker ? h("span", { class: "kicker", text: p.kicker }) : null,
+        h("h3", { text: p.title }),
+        p.summary ? h("span", { class: "more-sum", text: p.summary }) : null,
+        h("span", { class: "more-cta", "aria-hidden": "true" }, [
+          h("span", { class: "more-words" }, [h("span", { class: "on-closed", text: "See more" }), h("span", { class: "on-open", text: "See less" })]),
+          h("span", { class: "more-arrow" }),
+        ]),
+      ]),
+      h("div", { class: "more-body" }, [media(p), factList(p.facts), list(p.highlights, "dash"), tags(p.tags), linkButtons(p.links)]),
+    ]);
+  }
+
   function work() {
     var w = C.work; if (!w || w.show === false) return null;
-    var kids = [heading(w.title || "Work", w.note)], group = null;
+    var kids = [heading(w.title || "Work", w.note)], group = null, stack = null;
+    var moreTitle = w.moreTitle === undefined ? "More projects" : w.moreTitle;
     (w.projects || []).forEach(function (p) {
+      if (p.expandable) {                                   // rows with an arrow, stacked under one small heading
+        group = null;
+        if (!stack) { stack = h("div", { class: "more-list" }, [moreTitle ? h("p", { class: "more-kicker", text: moreTitle }) : null]); kids.push(stack); }
+        stack.appendChild(more(p));
+        return;
+      }
+      stack = null;
       if (p.featured) { group = null; kids.push(feature(p)); return; }
       if (!group) { group = h("div", { class: "grid" }); kids.push(group); }
       group.appendChild(card(p));
@@ -375,7 +403,7 @@
       heading(e.title || "Experience"),
       h("div", { class: "jobs" }, (e.items || []).map(function (j) {
         return h("article", { class: "job" }, [
-          h("div", { class: "job-meta" }, [h("p", { class: "dates", text: j.dates }), j.place ? h("p", { class: "place", text: j.place }) : null]),
+          h("div", { class: "job-meta" }, [j.dates ? h("p", { class: "dates", text: j.dates }) : null, j.place ? h("p", { class: "place", text: j.place }) : null]),
           h("div", { class: "job-body" }, [
             h("h3", {}, [j.role, j.org ? h("span", { class: "org", text: " — " + j.org }) : null]),
             list(j.bullets, "dash"),
