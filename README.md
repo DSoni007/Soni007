@@ -64,7 +64,7 @@ Change its heading and note with `contact.dialogTitle` and `contact.dialogNote`.
 
 **Add a job** — copy a block inside `experience.items`. **Add a skill** — add `"Name",` to a list.
 
-**Hide a section** — set `show: false` on it (e.g. `about: { show: false, ... }`).
+**Hide a section** — set `show: false` on it (e.g. `education: { show: false, ... }`).
 
 **Show a PDF (design report, résumé)** — drop it in `assets/`, then either make a fact open it
 (`{ label: "Documentation", value: "…", pdf: "assets/report.pdf" }`) or add a button to a project

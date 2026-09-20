@@ -281,10 +281,6 @@ a.fact-link::after { content: "Open"; }
 .g-item figcaption { margin-top: .5rem; }
 @media (prefers-reduced-motion: reduce) { .g-track { scroll-behavior: auto; } }
 
-/* ---------- ABOUT ---------- */
-.about { max-width: 860px; }
-.prose { display: grid; gap: 1.1rem; font-size: 1.12rem; max-width: 64ch; }
-
 /* ---------- EXPERIENCE ---------- */
 .job {
   display: grid; gap: .6rem clamp(20px, 4vw, 56px); grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);

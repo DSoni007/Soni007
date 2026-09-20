@@ -368,17 +368,6 @@
     return section("work", "", kids);
   }
 
-  /* ---------- ABOUT */
-  function about() {
-    var a = C.about; if (!a || a.show === false) return null;
-    return section("about", "alt", [
-      h("div", { class: "about" }, [
-        heading(a.title || "About"),
-        h("div", { class: "prose" }, (a.paragraphs || []).map(function (t) { return h("p", { text: t }); })),
-      ]),
-    ]);
-  }
-
   /* ---------- EXPERIENCE */
   function experience() {
     var e = C.experience; if (!e || e.show === false) return null;
@@ -728,7 +717,7 @@
     var s = C.site || {};
     if (brand) brand.textContent = s.shortName || s.name || "";
     if (!nav) return;
-    [["work", C.work, "Work"], ["about", C.about, "About"], ["experience", C.experience, "Experience"],
+    [["work", C.work, "Work"], ["experience", C.experience, "Experience"],
      ["skills", C.skills || C.education, "Skills"], ["contact", C.contact, "Contact"]].forEach(function (r) {
       if (r[1] && r[1].show !== false) nav.appendChild(h("a", { href: "#" + r[0], text: r[2] }));
     });
@@ -765,7 +754,7 @@
   initTheme();
   try {
     app.textContent = "";
-    [hero(), typingLine(), work(), about(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    [hero(), typingLine(), work(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
     initContactDialog();
     initPdfPreview();
     initTyping();

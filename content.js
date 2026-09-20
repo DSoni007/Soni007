@@ -202,16 +202,6 @@ window.PORTFOLIO = {
     ],
   },
 
-  /* ---------- ABOUT ------------------------------------------------ */
-  about: {
-    show: true,
-    title: "About",
-    paragraphs: [
-      "I got into aerospace by asking how high a high school team could fly. The rocketry association I founded from nothing became the first high school team at Launch Canada, and crossing that finish line only sharpened the question.",
-      "Since then the work has moved between CAD and the shop floor: engineering drawings and CMM inspection at Dellcom Aerospace, sheet-metal and composite repair at Venture Aviation, and flying gliders as a licensed Transport Canada pilot. Each taught me the same thing from a different side. Precision on paper only counts if it survives contact with the hardware, and with the people who build it.",
-    ],
-  },
-
   /* ---------- EXPERIENCE ------------------------------------------ */
   experience: {
     show: true,
