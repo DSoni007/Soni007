@@ -30,7 +30,7 @@ Add `featured: true` to make it a big block instead of a card.
    `imagePosition` (`"50% 0%"` keeps the top of the photo in frame, `"50% 50%"` the middle).
    Photos taken on a phone often carry your GPS location, so ask Claude to resize and clean them first.
 
-**Change your headshot** — replace `assets/headshot.jpg` with a new square photo (about 480 px wide is plenty),
+**Change your headshot** — replace `assets/headshot.jpg` with a new square photo (at least ~600 px wide; it's shown large on desktop),
 or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
 Set `photo: ""` to hide it.
 

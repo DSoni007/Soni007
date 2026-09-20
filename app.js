@@ -84,7 +84,7 @@
     var stats = x.stats || [];
     var photo = x.photo
       ? h("figure", { class: "avatar" }, [
-          h("img", { src: safeUrl(x.photo), alt: x.photoAlt || s.name || "", width: "480", height: "480", decoding: "async",
+          h("img", { src: safeUrl(x.photo), alt: x.photoAlt || s.name || "", width: "620", height: "620", decoding: "async",
                      style: "object-position:" + cropValue(x.photoPosition, "50% 50%") }),
         ])
       : null;
