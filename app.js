@@ -132,7 +132,12 @@
     return h("section", { class: "typer", id: "typer", "aria-label": "A few things about me" }, [
       h("div", { class: "wrap" }, [
         // the moving text is decoration; screen readers get the whole list instead
-        h("p", { class: "typer-line", "aria-hidden": "true" }, [h("span", { class: "typer-text" }), h("span", { class: "typer-caret" })]),
+        h("p", { class: "typer-line", "aria-hidden": "true" }, [
+          h("span", { class: "typer-slot" }, [
+            h("span", { class: "typer-sizer", text: lines[0] }),    // invisible: holds the whole phrase's width so it stays centered
+            h("span", { class: "typer-live" }, [h("span", { class: "typer-text" }), h("span", { class: "typer-caret" })]),
+          ]),
+        ]),
         h("ul", { class: "sr-only" }, lines.map(function (s) { return h("li", { text: s }); })),
       ]),
     ]);
@@ -143,7 +148,7 @@
     if (!root) return;
     var t = C.typing || {}, lines = typingLines();
     var speed = Math.max(20, Number(t.speed) || 70), hold = Math.max(400, Number(t.hold) || 1800);
-    var text = root.querySelector(".typer-text");
+    var text = root.querySelector(".typer-text"), sizer = root.querySelector(".typer-sizer");
 
     // people who ask their device for less motion get every line at once, standing still
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -160,6 +165,7 @@
       var full = lines[i];
       root.classList.add("typing");                      // caret stays solid while letters are moving
       if (!erasing) {
+        if (n === 0) sizer.textContent = full;            // reserve the whole phrase's width, so it stays centered while it types
         n++;
         text.textContent = full.slice(0, n);
         if (n >= full.length) { erasing = true; root.classList.remove("typing"); later(hold); }
