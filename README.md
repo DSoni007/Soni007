@@ -30,6 +30,13 @@ Add `featured: true` to make it a big block instead of a card.
    `imagePosition` (`"50% 0%"` keeps the top of the photo in frame, `"50% 50%"` the middle).
    Photos taken on a phone often carry your GPS location, so ask Claude to resize and clean them first.
 
+**Change your headshot** — replace `assets/headshot.jpg` with a new square photo (about 480 px wide is plenty),
+or point `hero.photo` at a different file. `hero.photoPosition` moves the crop inside the circle.
+Set `photo: ""` to hide it.
+
+**The "Get in touch" pop-up** — it lists whatever is set in `contact` (email, LinkedIn, résumé).
+Change its heading and note with `contact.dialogTitle` and `contact.dialogNote`.
+
 **Add a job** — copy a block inside `experience.items`. **Add a skill** — add `"Name",` to a list.
 
 **Hide a section** — set `show: false` on it (e.g. `about: { show: false, ... }`).

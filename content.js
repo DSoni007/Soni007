@@ -27,7 +27,15 @@ window.PORTFOLIO = {
 
   /* ---------- HERO (top of page) ---------------------------------- */
   hero: {
-    eyebrow: "Mechanical Engineering · University of Waterloo · Toronto, ON",
+    // Small line above your name. Leave "" to hide it.
+    eyebrow: "",
+
+    // Headshot beside your name, shown as a circle. Put the file in assets/; use photo: "" to hide it.
+    // photoPosition picks which part of the photo stays in the circle ("50% 30%" nudges the crop up).
+    photo: "assets/headshot.jpg",
+    photoAlt: "Headshot of Dhyan Soni",
+    photoPosition: "50% 50%",
+
     tagline: "Building toward Canada's sovereign aerospace capability.",
     intro:
       "I founded the Turner Fenton Rocketry Association and led it to become the first high school team at Launch Canada. " +
@@ -246,6 +254,11 @@ window.PORTFOLIO = {
     show: true,
     title: "Contact",
     blurb: "Open to mechanical engineering co-op and internship opportunities in aerospace. The fastest way to reach me is email.",
+
+    // The pop-up that the "Get in touch" button opens. It lists your email, LinkedIn
+    // and résumé (whichever are set below), plus this heading and note.
+    dialogTitle: "Get in touch",
+    dialogNote: "The fastest way to reach me is email.",
 
     // The email address is assembled by the page at load time, which keeps it
     // out of the plain HTML that spam scrapers read. Leave "" to hide.

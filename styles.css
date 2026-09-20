@@ -102,7 +102,14 @@ ul { padding: 0; list-style: none; }
 }
 @media (max-width: 860px) { .hero-in { grid-template-columns: minmax(0, 1fr); } }
 .eyebrow { font: 500 .74rem var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
-.hero h1 { display: flex; flex-direction: column; margin-bottom: 1.25rem; }
+.hero h1 { display: flex; flex-direction: column; }
+/* name on the left, round headshot beside it */
+.hero-id { display: flex; align-items: center; gap: clamp(16px, 4vw, 40px); margin-bottom: 1.25rem; }
+.avatar {
+  flex: none; width: clamp(88px, 12vw, 136px); aspect-ratio: 1; overflow: hidden;
+  border-radius: 50%; border: 2px solid var(--ink); background: var(--surface);
+}
+.avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .nm {
   font: 800 clamp(4.2rem, 14vw, 9.5rem)/.86 var(--f-display); text-transform: uppercase; letter-spacing: -.005em;
 }
@@ -242,3 +249,23 @@ ul { padding: 0; list-style: none; }
 .err { margin-block: 3rem; padding: 1.25rem 1.5rem; border: 2px solid var(--accent); background: var(--surface); display: grid; gap: .6rem; }
 .err code { font: 500 .85rem var(--f-mono); color: var(--accent); overflow-wrap: anywhere; }
 .noscript { max-width: 60ch; margin: 3rem auto; padding-inline: var(--gutter); }
+
+/* ---------- CONTACT POP-UP ---------- */
+.dlg {
+  width: min(520px, calc(100% - 2 * var(--gutter))); max-width: none; margin: auto; padding: 0;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--ink);
+}
+.dlg::backdrop { background: rgba(5, 12, 22, .66); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.dlg-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .55rem .9rem;
+  border-bottom: 1px solid var(--ink); font: 500 .7rem var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2);
+}
+.dlg-close {
+  padding: .25rem .65rem; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit;
+  color: var(--ink); background: transparent; border: 1px solid var(--line); transition: border-color .15s, color .15s;
+}
+.dlg-close:hover { border-color: var(--accent); color: var(--accent); }
+.dlg-body { display: grid; justify-items: start; gap: 1.1rem; padding: clamp(18px, 4vw, 28px); }
+.dlg-body h2 { font: 800 clamp(2.2rem, 7vw, 3rem)/1 var(--f-display); text-transform: uppercase; }
+.dlg-body .contact-list { width: 100%; }
+html.dlg-open { overflow: hidden; }

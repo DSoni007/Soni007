@@ -80,19 +80,27 @@
   function hero() {
     var s = C.site || {}, x = C.hero || {};
     var words = String(s.name || "").split(/\s+/).filter(Boolean);
-    var links = contactLinks();
-    var first = links[0];
+    var hasContact = contactLinks().length > 0;
     var stats = x.stats || [];
+    var photo = x.photo
+      ? h("figure", { class: "avatar" }, [
+          h("img", { src: safeUrl(x.photo), alt: x.photoAlt || s.name || "", width: "480", height: "480", decoding: "async",
+                     style: "object-position:" + cropValue(x.photoPosition, "50% 50%") }),
+        ])
+      : null;
 
     return h("header", { class: "hero", id: "top" }, [
       h("div", { class: "wrap hero-in" }, [
         h("div", { class: "hero-copy" }, [
           x.eyebrow ? h("p", { class: "eyebrow", text: x.eyebrow }) : null,
-          h("h1", { "aria-label": s.name }, words.map(function (w) { return h("span", { class: "nm", "aria-hidden": "true", text: w }); })),
+          h("div", { class: "hero-id" }, [
+            h("h1", { "aria-label": s.name }, words.map(function (w) { return h("span", { class: "nm", "aria-hidden": "true", text: w }); })),
+            photo,
+          ]),
           x.tagline ? h("p", { class: "tagline", text: x.tagline }) : null,
           x.intro ? h("p", { class: "intro", text: x.intro }) : null,
           h("div", { class: "actions" }, [
-            first ? h("a", { class: "btn btn-primary", href: safeUrl(first.url) }, [first.label === "Email" ? "Get in touch" : first.label]) : null,
+            hasContact ? h("button", { class: "btn btn-primary", type: "button", "data-contact-open": "1", "aria-haspopup": "dialog" }, ["Get in touch"]) : null,
             C.work && C.work.show !== false ? h("a", { class: "btn", href: "#work" }, ["See the work"]) : null,
           ]),
         ]),
@@ -281,6 +289,62 @@
     ]);
   }
 
+  /* ---------- CONTACT POP-UP (opened by the "Get in touch" button) */
+  function contactDialog() {
+    var links = contactLinks(); if (!links.length) return null;
+    var c = C.contact || {};
+    return h("dialog", { class: "dlg", id: "contact-dialog", "aria-labelledby": "contact-dialog-title" }, [
+      h("div", { class: "dlg-head" }, [
+        h("span", { text: "Contact" }),
+        h("button", { class: "dlg-close", type: "button", "data-contact-close": "1" }, ["Close"]),
+      ]),
+      h("div", { class: "dlg-body" }, [
+        h("h2", { id: "contact-dialog-title", text: c.dialogTitle || "Get in touch" }),
+        c.dialogNote ? h("p", { text: c.dialogNote }) : null,
+        h("ul", { class: "contact-list" }, links.map(function (l) {
+          return h("li", {}, [
+            h("a", { href: safeUrl(l.url), target: l.ext ? "_blank" : null, rel: l.ext ? "noopener" : null }, [
+              h("span", { class: "lbl", text: l.label }),
+              h("span", { class: "val", text: l.text }),
+            ]),
+          ]);
+        })),
+        c.email ? h("button", { class: "btn", type: "button", "data-copy-email": c.email }, ["Copy email address"]) : null,
+      ]),
+    ]);
+  }
+
+  function initContactDialog() {
+    var dlg = document.getElementById("contact-dialog");
+    if (!dlg) return;
+    var root = document.documentElement;
+    var canModal = typeof dlg.showModal === "function";
+
+    document.querySelectorAll("[data-contact-open]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (!canModal) { location.hash = "contact"; return; }   // very old browsers: jump to the Contact section instead
+        dlg.showModal();
+        root.classList.add("dlg-open");
+      });
+    });
+
+    // close with the Close button, or by clicking the dimmed area outside the box (Esc works by itself)
+    dlg.addEventListener("click", function (e) {
+      if (e.target === dlg || (e.target.closest && e.target.closest("[data-contact-close]"))) dlg.close();
+    });
+    dlg.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); dlg.close(); } });
+    dlg.addEventListener("close", function () { root.classList.remove("dlg-open"); });
+
+    var copy = dlg.querySelector("[data-copy-email]");
+    if (copy) copy.addEventListener("click", function () {
+      var original = copy.textContent;
+      function say(msg) { copy.textContent = msg; setTimeout(function () { copy.textContent = original; }, 1600); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(copy.getAttribute("data-copy-email")).then(function () { say("Copied"); }, function () { say("Couldn't copy"); });
+      } else { say("Couldn't copy"); }
+    });
+  }
+
   /* ---------- nav (built from whichever sections are visible) */
   function buildNav() {
     var nav = document.getElementById("nav"), brand = document.getElementById("brand");
@@ -322,7 +386,8 @@
   initTheme();
   try {
     app.textContent = "";
-    [hero(), work(), about(), experience(), skillsAndEducation(), contact(), footer()].forEach(function (n) { if (n) app.appendChild(n); });
+    [hero(), work(), about(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    initContactDialog();
     buildNav();
     structuredData();
     if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
