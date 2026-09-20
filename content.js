@@ -71,12 +71,13 @@ window.PORTFOLIO = {
     show: true,
     title: "Work",
     note: "Rocketry & aerospace projects",
-    moreTitle: "More projects",   // label above the project carousel (set it to "" to hide it)
+    moreTitle: "More projects",   // heading of the section under Work that holds every other project
 
     projects: [
-      // featured: true  →  the big block at the top. It stays put.
-      // Every other project goes into the carousel under it, in the order listed. A project that has facts,
-      // highlights or links gets a "See more" arrow on its card, and those open in a pop-up.
+      // featured: true  →  the big block in the Work section. It stays put.
+      // Every other project becomes a card in the More projects section right under it (a swipeable strip, in the
+      // order listed). A project that has facts, highlights or links gets a "See more" arrow on its card, and those
+      // open in a pop-up.
       {
         featured: true,
         kicker: "Launch Canada 2026",

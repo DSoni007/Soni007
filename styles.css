@@ -241,8 +241,19 @@ a.fact-link::after { content: "Open"; }
 .card .tags { margin-top: auto; padding-top: .6rem; }
 .media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line); }
 
-/* ---------- OTHER PROJECTS: a swipeable strip of cards (arrows, counter and swipe are the photo carousel's) ---------- */
-.p-strip { margin-top: clamp(28px, 4vw, 44px); }
+/* ---------- MORE PROJECTS: a banded section of its own, holding a swipeable strip (the photo carousel's strip) ---------- */
+.sec-head a.jump { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; white-space: nowrap; }   /* "7 more projects ↓" beside the Work heading */
+.sec-head a.jump:hover { color: var(--ink); }
+.p-head { align-items: center; }
+.p-head .g-count { margin-left: auto; font: 500 .8rem var(--f-mono); letter-spacing: .09em; }   /* counter and arrows sit at the right of the heading */
+.p-head .g-nav { margin-left: 0; }
+.p-head .g-btn { width: 46px; height: 46px; font-size: 1.2rem; border-color: var(--ink); }   /* bigger, darker arrows: hard to miss */
+@media (max-width: 560px) {   /* phone: the title on top, then the counter on the left and the arrows on the right */
+  .p-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem 1rem; }
+  .p-head h2 { grid-column: 1 / -1; }
+  .p-head .g-count { margin-left: 0; }
+}
+.projects .card { background: var(--bg); }   /* the cards sit inset in the band */
 .p-card { flex: 0 0 min(420px, 86%); scroll-snap-align: start; }   /* about two on a laptop, one on a phone, the next one peeking in */
 /* the "See more" arrow at the foot of a card */
 .more-btn {

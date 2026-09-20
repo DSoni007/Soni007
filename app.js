@@ -34,10 +34,10 @@
     return h("ul", { class: cls }, items.map(function (t) { return h("li", { text: t }); }));
   }
 
-  function heading(title, note) {
+  function heading(title, note) {           // note can be plain text or a piece of page (a link, say)
     return h("div", { class: "sec-head" }, [
       h("h2", { text: title }),
-      note ? h("p", { text: note }) : null,
+      note ? h("p", {}, [note]) : null,
     ]);
   }
 
@@ -261,18 +261,19 @@
     return box;
   }
 
-  // A horizontal strip with arrows and a counter. It carries the Goldeneye photos and the row of other projects.
+  // A horizontal strip with arrows and a counter. It carries the Goldeneye photos and the More projects section.
+  // The counter and arrows go into `head` when one is given (the section's heading row), else into a small bar above.
   var stripUpdates = [];                   // each strip's "refresh the counter" function, run once the page is on screen
-  function strip(title, label, noun, nodes) {
+  function strip(title, label, noun, nodes, head) {
     var n = nodes.length;
     var track = h("div", { class: "g-track", tabindex: "0", role: "group", "aria-label": label }, nodes);
     var count = h("span", { class: "g-count", text: "01 / " + pad2(n) });
     var prev = h("button", { class: "g-btn", type: "button", "aria-label": "Previous " + noun, text: "←" });
     var next = h("button", { class: "g-btn", type: "button", "aria-label": "Next " + noun, text: "→" });
-    var box = h("div", { class: "gallery", role: "region", "aria-roledescription": "carousel", "aria-label": label }, [
-      h("div", { class: "g-bar" }, [title ? h("span", { text: title }) : null, count, h("div", { class: "g-nav" }, [prev, next])]),
-      track,
-    ]);
+    var bar = head || h("div", { class: "g-bar" }, [title ? h("span", { text: title }) : null]);
+    bar.appendChild(count);
+    bar.appendChild(h("div", { class: "g-nav" }, [prev, next]));
+    var box = h("div", { class: "gallery", role: "region", "aria-roledescription": "carousel", "aria-label": label }, [bar, track]);
     stripUpdates.push(wireGallery(track, prev, next, count, n));
     return box;
   }
@@ -377,20 +378,33 @@
     ]);
   }
 
+  function otherProjects() {                            // every project except the big featured one(s)
+    var w = C.work;
+    return w && w.show !== false ? (w.projects || []).filter(function (p) { return !p.featured; }) : [];
+  }
+
+  // WORK: the featured block, which stays put. Beside its heading, a link down to the More projects section,
+  // so nobody stops reading after the big block without knowing there is more.
   function work() {
     var w = C.work; if (!w || w.show === false) return null;
-    var kids = [heading(w.title || "Work", w.note)], others = [];
-    (w.projects || []).forEach(function (p) {
-      if (p.featured) kids.push(feature(p));           // the big block stays put
-      else others.push(p);                             // everything else goes into the strip below it
-    });
-    if (others.length) {
-      var label = w.moreTitle === undefined ? "More projects" : w.moreTitle;
-      var box = strip(label, label || "Projects", "project", others.map(card));
-      box.className += " p-strip";
-      kids.push(box);
-    }
+    var n = otherProjects().length;
+    var note = n
+      ? h("span", {}, [
+          w.note ? w.note + "  ·  " : null,
+          h("a", { class: "jump", href: "#projects", text: n + " more project" + (n === 1 ? "" : "s") + " ↓" }),
+        ])
+      : w.note;
+    var kids = [heading(w.title || "Work", note)];
+    (w.projects || []).forEach(function (p) { if (p.featured) kids.push(feature(p)); });
     return section("work", "", kids);
+  }
+
+  // MORE PROJECTS: its own banded section with a big heading, holding a swipeable strip of cards.
+  function projects() {
+    var others = otherProjects(); if (!others.length) return null;
+    var title = C.work.moreTitle || "More projects";
+    var head = h("div", { class: "sec-head p-head" }, [h("h2", { text: title })]);   // the counter and arrows join it
+    return section("projects", "alt projects", [strip("", title, "project", others.map(card), head)]);
   }
 
   /* ---------- PROJECT POP-UP (the "See more" arrow on a card) */
@@ -786,7 +800,7 @@
     var s = C.site || {};
     if (brand) brand.textContent = s.shortName || s.name || "";
     if (!nav) return;
-    [["work", C.work, "Work"], ["experience", C.experience, "Experience"],
+    [["work", C.work, "Work"], ["projects", document.getElementById("projects"), "Projects"], ["experience", C.experience, "Experience"],
      ["skills", C.skills || C.education, "Skills"], ["contact", C.contact, "Contact"]].forEach(function (r) {
       if (r[1] && r[1].show !== false) nav.appendChild(h("a", { href: "#" + r[0], text: r[2] }));
     });
@@ -823,7 +837,7 @@
   initTheme();
   try {
     app.textContent = "";
-    [hero(), typingLine(), work(), experience(), skillsAndEducation(), contact(), footer(), contactDialog(), projectDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    [hero(), typingLine(), work(), projects(), experience(), skillsAndEducation(), contact(), footer(), contactDialog(), projectDialog()].forEach(function (n) { if (n) app.appendChild(n); });
     stripUpdates.forEach(function (update) { update(); });   // now that the strips are on the page, their counters and arrows can settle
     initContactDialog();
     initProjectDialog();
