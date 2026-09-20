@@ -71,11 +71,12 @@ window.PORTFOLIO = {
     show: true,
     title: "Work",
     note: "Rocketry & aerospace projects",
-    moreTitle: "More projects",   // small heading above the projects that open with an arrow (set it to "" to hide it)
+    moreTitle: "More projects",   // label above the project carousel (set it to "" to hide it)
 
     projects: [
-      // featured: true    →  big block.  Leave it out for a normal card.
-      // expandable: true  →  compact row with an arrow; its facts, highlights and links open underneath when clicked.
+      // featured: true  →  the big block at the top. It stays put.
+      // Every other project goes into the carousel under it, in the order listed. A project that has facts,
+      // highlights or links gets a "See more" arrow on its card, and those open in a pop-up.
       {
         featured: true,
         kicker: "Launch Canada 2026",
@@ -149,6 +150,85 @@ window.PORTFOLIO = {
       },
 
       {
+        kicker: "Launch Canada 2025",
+        title: "Spectre",
+        summary:
+          "Turner Fenton Rocketry's entry at Launch Canada 2025, launched to an apogee of 10,147 ft and a maximum velocity of Mach 0.95. " +
+          "The flight made the team the first Canadian high school to launch and recover a competition rocket.",
+        facts: [
+          { label: "Event",        value: "Launch Canada 2025 · Timmins, ON" },
+          { label: "Launched",     value: "August 19, 2025" },
+          { label: "Apogee",       value: "10,147 ft (3,092 m)" },
+          { label: "Max velocity", value: "Mach 0.95 (1,148 km/h)" },
+          { label: "Result",       value: "11th in Basic Launch" },
+          { label: "Recovery",     value: "Two sequential parachutes" },
+          { label: "My scope",     value: "Team lead · Avionics" },
+        ],
+        highlights: [
+          "Competed against teams from 30 universities and placed 11th in the Basic Launch category.",
+          "Flew for just over a minute before its two sequential parachutes deployed, and was recovered about three hours later, suspended in the boreal forest.",
+          "The third rocket the team launched that year, after two Stallion flights.",
+        ],
+        tags: ["Avionics", "Parachute recovery", "Launch Canada"],
+        links: [
+          { label: "Peel District School Board release", url: "https://www.peelschools.org/news/NEWSRELEASETurnerFentonSecondarySchoolstudentsmakehistorywithSpectrerocketlaunch" },
+          { label: "inBrampton coverage", url: "https://www.insauga.com/brampton-rocket-club-students-first-in-canada-to-compete-against-universities/" },
+          { label: "Launch Canada results", url: "https://www.launchcanada.org/lc-2025-highlights" },
+        ],
+      },
+
+      {
+        kicker: "IB Physics IA · 2024–25",
+        title: "Wind tunnel",
+        summary:
+          "Designed a small wind tunnel to measure the lift coefficient of a 3D-printed NACA 6412 airfoil, " +
+          "with a smoke system to show whether the air flows smoothly or turbulently.",
+        facts: [
+          { label: "Airfoil",      value: "NACA 6412 · 0.15 m chord" },
+          { label: "Contraction",  value: "5:1 ratio · 12° angle" },
+          { label: "Test section", value: "0.018 m² · 8% blockage" },
+          { label: "Fan",          value: "12 in · 5 speeds" },
+          { label: "Repeats",      value: "5 trials per fan speed" },
+        ],
+        highlights: [
+          "Lift follows F = ½ρv²·A·CL, so plotting lift against airspeed squared gives a straight line whose slope yields the lift coefficient.",
+          "A honeycomb of straws and a mesh screen straighten the air before a contraction speeds it into the test section; a diffuser slows it on the way out.",
+          "Smoke from mineral oil vaporized by a nichrome wire is drawn in through a valve by the tunnel's low pressure, and shows laminar versus turbulent flow through an acrylic window.",
+          "Lift is read as an apparent loss of mass on a scale under the airfoil (F = 9.81 × Δm), with an anemometer downstream of the wing measuring airspeed.",
+          "Sized the airfoil (0.15 m chord, 0.08 m span) to keep blockage at 8%, under the 10% limit for clean flow.",
+          "Air density comes from the day's temperature and METAR pressure, and the uncertainty from repeated trials carries through to error bars and max/min fit lines.",
+        ],
+        tags: ["Aerodynamics", "Wind tunnel design", "3D printing", "Experimental method"],
+      },
+
+      {
+        kicker: "MYP Personal Project · 2024",
+        title: "2-axis TVC mount",
+        summary:
+          "A 3D-printed, servo-driven thrust vector control gimbal for model rockets, " +
+          "designed over three Fusion 360 iterations and steered by an Arduino-compatible board.",
+        facts: [
+          { label: "Axes",           value: "2 · servo-driven" },
+          { label: "Range achieved", value: "≈50° X · 17.5° Y" },
+          { label: "Target",         value: "±15° on each axis" },
+          { label: "Controller",     value: "Elegoo Uno" },
+          { label: "Iterations",     value: "3 in Fusion 360" },
+          { label: "Power",          value: "9 V battery" },
+        ],
+        highlights: [
+          "Modelled on the 3D-printed TVC mount that Joe Barnard of BPS.Space flies on his rockets.",
+          "Restored an old 3D printer to make the parts, fixing its glass bed's adhesion with masking tape and a glue-stick layer.",
+          "Three iterations: a one-axis prototype, a more compact elliptical ring, then an added outer ring for the second axis, which printed correctly on the first try.",
+          "Drilled ultra-fine holes through nails to make the pushrods that turn each servo's rotation into linear motion at the gimbal.",
+          "Wired both servos to the Uno on a breadboard, soldered a 9 V battery for portable power, and learned PWM servo control.",
+          "Wrote the Arduino (C/C++) code: calibrated each servo's neutral position (X 85°, Y 65°), then a synchronized dual-axis routine and a circular-motion program built from a mathematical model of the mount's positions.",
+          "Dropped a planned Bluetooth controller and custom PCB after research showed the mount didn't need them, and planned the work in Notion.",
+          "Next steps identified: more Y-axis range (mount its servo lower), a lighter and more compact design, and better print quality.",
+        ],
+        tags: ["Fusion 360", "3D printing", "Arduino", "Servo control", "Mechatronics"],
+      },
+
+      {
         kicker: "Instrumentation",
         title: "Supersonic pitot tube",
         summary:
@@ -188,93 +268,9 @@ window.PORTFOLIO = {
         image: "", imageAlt: "", links: [],
       },
 
-      // ----- More projects: each opens with an arrow (expandable: true) -----
-      {
-        expandable: true,
-        kicker: "Launch Canada 2025",
-        title: "Spectre",
-        summary:
-          "Turner Fenton Rocketry's entry at Launch Canada 2025, launched to an apogee of 10,147 ft and a maximum velocity of Mach 0.95. " +
-          "The flight made the team the first Canadian high school to launch and recover a competition rocket.",
-        facts: [
-          { label: "Event",        value: "Launch Canada 2025 · Timmins, ON" },
-          { label: "Launched",     value: "August 19, 2025" },
-          { label: "Apogee",       value: "10,147 ft (3,092 m)" },
-          { label: "Max velocity", value: "Mach 0.95 (1,148 km/h)" },
-          { label: "Result",       value: "11th in Basic Launch" },
-          { label: "Recovery",     value: "Two sequential parachutes" },
-          { label: "My scope",     value: "Team lead · Avionics" },
-        ],
-        highlights: [
-          "Competed against teams from 30 universities and placed 11th in the Basic Launch category.",
-          "Flew for just over a minute before its two sequential parachutes deployed, and was recovered about three hours later, suspended in the boreal forest.",
-          "The third rocket the team launched that year, after two Stallion flights.",
-        ],
-        tags: ["Avionics", "Parachute recovery", "Launch Canada"],
-        links: [
-          { label: "Peel District School Board release", url: "https://www.peelschools.org/news/NEWSRELEASETurnerFentonSecondarySchoolstudentsmakehistorywithSpectrerocketlaunch" },
-          { label: "inBrampton coverage", url: "https://www.insauga.com/brampton-rocket-club-students-first-in-canada-to-compete-against-universities/" },
-          { label: "Launch Canada results", url: "https://www.launchcanada.org/lc-2025-highlights" },
-        ],
-      },
-
-      {
-        expandable: true,
-        kicker: "IB Physics IA · 2024–25",
-        title: "Wind tunnel",
-        summary:
-          "Designed a small wind tunnel to measure the lift coefficient of a 3D-printed NACA 6412 airfoil, " +
-          "with a smoke system to show whether the air flows smoothly or turbulently.",
-        facts: [
-          { label: "Airfoil",      value: "NACA 6412 · 0.15 m chord" },
-          { label: "Contraction",  value: "5:1 ratio · 12° angle" },
-          { label: "Test section", value: "0.018 m² · 8% blockage" },
-          { label: "Fan",          value: "12 in · 5 speeds" },
-          { label: "Repeats",      value: "5 trials per fan speed" },
-        ],
-        highlights: [
-          "Lift follows F = ½ρv²·A·CL, so plotting lift against airspeed squared gives a straight line whose slope yields the lift coefficient.",
-          "A honeycomb of straws and a mesh screen straighten the air before a contraction speeds it into the test section; a diffuser slows it on the way out.",
-          "Smoke from mineral oil vaporized by a nichrome wire is drawn in through a valve by the tunnel's low pressure, and shows laminar versus turbulent flow through an acrylic window.",
-          "Lift is read as an apparent loss of mass on a scale under the airfoil (F = 9.81 × Δm), with an anemometer downstream of the wing measuring airspeed.",
-          "Sized the airfoil (0.15 m chord, 0.08 m span) to keep blockage at 8%, under the 10% limit for clean flow.",
-          "Air density comes from the day's temperature and METAR pressure, and the uncertainty from repeated trials carries through to error bars and max/min fit lines.",
-        ],
-        tags: ["Aerodynamics", "Wind tunnel design", "3D printing", "Experimental method"],
-      },
-
-      {
-        expandable: true,
-        kicker: "MYP Personal Project · 2024",
-        title: "2-axis TVC mount",
-        summary:
-          "A 3D-printed, servo-driven thrust vector control gimbal for model rockets, " +
-          "designed over three Fusion 360 iterations and steered by an Arduino-compatible board.",
-        facts: [
-          { label: "Axes",           value: "2 · servo-driven" },
-          { label: "Range achieved", value: "≈50° X · 17.5° Y" },
-          { label: "Target",         value: "±15° on each axis" },
-          { label: "Controller",     value: "Elegoo Uno" },
-          { label: "Iterations",     value: "3 in Fusion 360" },
-          { label: "Power",          value: "9 V battery" },
-        ],
-        highlights: [
-          "Modelled on the 3D-printed TVC mount that Joe Barnard of BPS.Space flies on his rockets.",
-          "Restored an old 3D printer to make the parts, fixing its glass bed's adhesion with masking tape and a glue-stick layer.",
-          "Three iterations: a one-axis prototype, a more compact elliptical ring, then an added outer ring for the second axis, which printed correctly on the first try.",
-          "Drilled ultra-fine holes through nails to make the pushrods that turn each servo's rotation into linear motion at the gimbal.",
-          "Wired both servos to the Uno on a breadboard, soldered a 9 V battery for portable power, and learned PWM servo control.",
-          "Wrote the Arduino (C/C++) code: calibrated each servo's neutral position (X 85°, Y 65°), then a synchronized dual-axis routine and a circular-motion program built from a mathematical model of the mount's positions.",
-          "Dropped a planned Bluetooth controller and custom PCB after research showed the mount didn't need them, and planned the work in Notion.",
-          "Next steps identified: more Y-axis range (mount its servo lower), a lighter and more compact design, and better print quality.",
-        ],
-        tags: ["Fusion 360", "3D printing", "Arduino", "Servo control", "Mechatronics"],
-      },
-
       // TEMPLATE: copy the block below, delete the "//" at the start of each
       // line, paste it above this note, and fill it in.
-      // (To make it a row that opens with an arrow, add  expandable: true,  and use  facts: [{ label: "…", value: "…" }],
-      //  highlights, tags and links; the summary stays visible and the rest opens when clicked.)
+      // (Add  facts: [{ label: "Apogee", value: "10,000 ft" }]  and a longer  highlights  list to give the card a "See more" pop-up.)
       //
       // {
       //   kicker: "Category",

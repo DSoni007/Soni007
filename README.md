@@ -30,12 +30,12 @@ Save it, refresh the page, done. (Double-click `index.html` to preview on your c
 
 **Add a new project** — copy any project block (from `{` to `},`), paste it after the last
 one, change the text. There's a commented template at the bottom of the projects list.
-Add `featured: true` to make it a big block instead of a card.
+It joins the carousel below automatically.
 
-**Make a project open with an arrow** — add `expandable: true` to it. It then shows as a compact row (small label,
-title, one-line summary) with an arrow, and clicking it opens its `facts`, `highlights`, `tags` and `links` underneath.
-These rows sit together under a small "More projects" heading: change it with `work.moreTitle`, or set it to `""` to hide it.
-Delete the `expandable` line to turn the project back into a normal card.
+**The project carousel** — the big Goldeneye block (`featured: true`) always stays put at the top. Every other project is a
+card in a swipeable strip under it, in the order listed; the arrows, swiping, scrolling and the arrow keys all move it.
+Change the strip's label with `work.moreTitle`, or set it to `""` to hide it. A card that has `facts`, `highlights` or
+`links` gets a "See more" arrow, and clicking it opens all of that in a pop-up. A card with only a summary and tags has no arrow.
 
 **Add a photo to a project**
 1. Put the image in the `assets/` folder (e.g. `assets/goldeneye.jpg`; keep it under ~500 KB).

@@ -261,25 +261,31 @@
     return box;
   }
 
+  // A horizontal strip with arrows and a counter. It carries the Goldeneye photos and the row of other projects.
+  var stripUpdates = [];                   // each strip's "refresh the counter" function, run once the page is on screen
+  function strip(title, label, noun, nodes) {
+    var n = nodes.length;
+    var track = h("div", { class: "g-track", tabindex: "0", role: "group", "aria-label": label }, nodes);
+    var count = h("span", { class: "g-count", text: "01 / " + pad2(n) });
+    var prev = h("button", { class: "g-btn", type: "button", "aria-label": "Previous " + noun, text: "←" });
+    var next = h("button", { class: "g-btn", type: "button", "aria-label": "Next " + noun, text: "→" });
+    var box = h("div", { class: "gallery", role: "region", "aria-roledescription": "carousel", "aria-label": label }, [
+      h("div", { class: "g-bar" }, [title ? h("span", { text: title }) : null, count, h("div", { class: "g-nav" }, [prev, next])]),
+      track,
+    ]);
+    stripUpdates.push(wireGallery(track, prev, next, count, n));
+    return box;
+  }
+
   function gallery(p) {
     var g = (p.gallery || []).filter(function (it) { return it && it.src; });
     if (!g.length) return null;
-    var n = g.length, label = (p.title || "Project") + " photos";
-    var track = h("div", { class: "g-track", tabindex: "0", role: "group", "aria-label": label }, g.map(function (it, i) {
+    return strip("Photos", (p.title || "Project") + " photos", "photo", g.map(function (it, i) {
       return h("figure", { class: "g-item" }, [
         h("img", { src: safeUrl(it.src), alt: it.alt || "", loading: i < 3 ? "eager" : "lazy", decoding: "async" }),
         it.caption ? h("figcaption", { text: it.caption }) : null,
       ]);
     }));
-    var count = h("span", { class: "g-count", text: "01 / " + pad2(n) });
-    var prev = h("button", { class: "g-btn", type: "button", "aria-label": "Previous photo", text: "←" });
-    var next = h("button", { class: "g-btn", type: "button", "aria-label": "Next photo", text: "→" });
-    var box = h("div", { class: "gallery", role: "region", "aria-roledescription": "carousel", "aria-label": label }, [
-      h("div", { class: "g-bar" }, [h("span", { text: "Photos" }), count, h("div", { class: "g-nav" }, [prev, next])]),
-      track,
-    ]);
-    wireGallery(track, prev, next, count, n);
-    return box;
   }
 
   // Buttons, counter and swipe/scroll all share one scrolling strip, so nothing can get out of sync.
@@ -322,6 +328,7 @@
       if (im) im.addEventListener("load", update);
     }
     update();
+    return update;
   }
 
   function feature(p) {
@@ -348,52 +355,86 @@
     ]);
   }
 
+  // The other projects are small cards in a swipeable strip. A card with facts, highlights or links also gets a
+  // "See more" arrow, which opens all of it in a pop-up, so the page itself never grows.
+  var detailProjects = [];                 // the projects that have a pop-up; each card's button points into this list
+  function hasDetails(p) {
+    return !!((p.facts && p.facts.length) || (p.highlights && p.highlights.length) || (p.links && p.links.length));
+  }
+
   function card(p) {
-    return h("article", { class: "card" }, [
+    var at = hasDetails(p) ? detailProjects.push(p) - 1 : -1;
+    return h("article", { class: "card p-card" }, [
       media(p),
       p.kicker ? h("p", { class: "kicker", text: p.kicker }) : null,
       h("h3", { text: p.title }),
       p.summary ? h("p", { text: p.summary }) : null,
-      list(p.highlights, "dash"),
-      linkButtons(p.links),
       tags(p.tags),
-    ]);
-  }
-
-  // A project shown as a compact row with an arrow: the top stays short, and clicking it (or pressing Enter)
-  // opens the rest underneath. Built on <details>, so the keyboard works and the browser's find-in-page can open it.
-  function more(p) {
-    return h("details", { class: "more" }, [
-      h("summary", { class: "more-head" }, [
-        p.kicker ? h("span", { class: "kicker", text: p.kicker }) : null,
-        h("h3", { text: p.title }),
-        p.summary ? h("span", { class: "more-sum", text: p.summary }) : null,
-        h("span", { class: "more-cta", "aria-hidden": "true" }, [
-          h("span", { class: "more-words" }, [h("span", { class: "on-closed", text: "See more" }), h("span", { class: "on-open", text: "See less" })]),
-          h("span", { class: "more-arrow" }),
-        ]),
+      at < 0 ? null : h("button", { class: "more-btn", type: "button", "data-project": String(at), "aria-haspopup": "dialog", "aria-label": "See more about " + p.title }, [
+        h("span", { text: "See more" }),
+        h("span", { class: "more-arrow", "aria-hidden": "true", text: "→" }),
       ]),
-      h("div", { class: "more-body" }, [media(p), factList(p.facts), list(p.highlights, "dash"), tags(p.tags), linkButtons(p.links)]),
     ]);
   }
 
   function work() {
     var w = C.work; if (!w || w.show === false) return null;
-    var kids = [heading(w.title || "Work", w.note)], group = null, stack = null;
-    var moreTitle = w.moreTitle === undefined ? "More projects" : w.moreTitle;
+    var kids = [heading(w.title || "Work", w.note)], others = [];
     (w.projects || []).forEach(function (p) {
-      if (p.expandable) {                                   // rows with an arrow, stacked under one small heading
-        group = null;
-        if (!stack) { stack = h("div", { class: "more-list" }, [moreTitle ? h("p", { class: "more-kicker", text: moreTitle }) : null]); kids.push(stack); }
-        stack.appendChild(more(p));
-        return;
-      }
-      stack = null;
-      if (p.featured) { group = null; kids.push(feature(p)); return; }
-      if (!group) { group = h("div", { class: "grid" }); kids.push(group); }
-      group.appendChild(card(p));
+      if (p.featured) kids.push(feature(p));           // the big block stays put
+      else others.push(p);                             // everything else goes into the strip below it
     });
+    if (others.length) {
+      var label = w.moreTitle === undefined ? "More projects" : w.moreTitle;
+      var box = strip(label, label || "Projects", "project", others.map(card));
+      box.className += " p-strip";
+      kids.push(box);
+    }
     return section("work", "", kids);
+  }
+
+  /* ---------- PROJECT POP-UP (the "See more" arrow on a card) */
+  function projectDialog() {
+    if (!detailProjects.length) return null;
+    return h("dialog", { class: "dlg proj-dlg", id: "project-dialog", "aria-labelledby": "project-dialog-title" }, [
+      h("div", { class: "dlg-head" }, [
+        h("span", { text: "Project" }),
+        h("button", { class: "dlg-close", type: "button", "data-project-close": "1" }, ["Close"]),
+      ]),
+      h("div", { class: "dlg-body proj-body" }),
+    ]);
+  }
+
+  function initProjectDialog() {
+    var dlg = document.getElementById("project-dialog");
+    if (!dlg || typeof dlg.showModal !== "function") return;
+    var root = document.documentElement;
+    var kicker = dlg.querySelector(".dlg-head span"), body = dlg.querySelector(".proj-body");
+
+    document.addEventListener("click", function (e) {      // one listener covers every card's button
+      var btn = e.target.closest && e.target.closest("[data-project]");
+      var p = btn && detailProjects[Number(btn.getAttribute("data-project"))];
+      if (!p) return;
+      kicker.textContent = p.kicker || "Project";
+      body.textContent = "";
+      [
+        h("h2", { id: "project-dialog-title", text: p.title }),
+        p.summary ? h("p", { class: "lede", text: p.summary }) : null,
+        factList(p.facts), list(p.highlights, "dash"), tags(p.tags), linkButtons(p.links),
+      ].forEach(function (n) { if (n) body.appendChild(n); });
+      dlg.showModal();
+      dlg.scrollTop = 0;
+      root.classList.add("dlg-open");
+    });
+
+    // close with the Close button, Esc, or by clicking the dimmed area outside the box; page scrolling comes back at once
+    function unlock() { if (!document.querySelector("dialog[open]")) root.classList.remove("dlg-open"); }
+    function shut() { dlg.close(); unlock(); }
+    dlg.addEventListener("click", function (e) {
+      if (e.target === dlg || (e.target.closest && e.target.closest("[data-project-close]"))) shut();
+    });
+    dlg.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); shut(); } });
+    dlg.addEventListener("close", unlock);
   }
 
   /* ---------- EXPERIENCE */
@@ -782,8 +823,10 @@
   initTheme();
   try {
     app.textContent = "";
-    [hero(), typingLine(), work(), experience(), skillsAndEducation(), contact(), footer(), contactDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    [hero(), typingLine(), work(), experience(), skillsAndEducation(), contact(), footer(), contactDialog(), projectDialog()].forEach(function (n) { if (n) app.appendChild(n); });
+    stripUpdates.forEach(function (update) { update(); });   // now that the strips are on the page, their counters and arrows can settle
     initContactDialog();
+    initProjectDialog();
     initPdfPreview();
     initTyping();
     buildNav();
