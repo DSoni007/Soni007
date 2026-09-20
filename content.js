@@ -323,17 +323,6 @@ window.PORTFOLIO = {
         ],
       },
       {
-        role: "Drafting Engineer",
-        org: "Launch Canada Turbopump Project",
-        place: "",
-        dates: "Dec 2024 – Present",
-        bullets: [
-          "Created engineering drawings from complex turbomachinery components on OnShape.",
-          "Maintained version control and component databases on Excel.",
-          "Designed promotional material and information packages for the development program, using Canva.",
-        ],
-      },
-      {
         role: "Mechanical Engineering Intern",
         org: "Dellcom Aerospace",
         place: "Concord, ON",
@@ -356,6 +345,17 @@ window.PORTFOLIO = {
           "Performed Transport Canada-approved maintenance, overhauls, and repairs on commercial aircraft.",
           "Executed sheet-metal riveting, composite repairs, and refinishing to manufacturer specifications.",
           "Maintained compliance documentation and airworthiness logs to strict Transport Canada regulatory standards.",
+        ],
+      },
+      {
+        role: "Drafting Engineer",
+        org: "Launch Canada Turbopump Project",
+        place: "",
+        dates: "Dec 2024 – Present",
+        bullets: [
+          "Created engineering drawings from complex turbomachinery components on OnShape.",
+          "Maintained version control and component databases on Excel.",
+          "Designed promotional material and information packages for the development program, using Canva.",
         ],
       },
       {
