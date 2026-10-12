@@ -125,6 +125,15 @@ last edit, or look near it for a line that's missing its trailing `,`.
 The browser tab title and the Google/LinkedIn link preview come from `index.html` (the
 `<title>` and `description` lines near the top), not `content.js`. Update those two too.
 
+## The site icon (and why Google needs real files)
+
+The little icon in the browser tab and in Google's search results comes from `favicon.ico`, `favicon-192.png`,
+`favicon.svg` and `apple-touch-icon.png` in this folder. **Keep them as real files in the root.** Google Search can only use
+a PNG or ICO file; it ignores SVG and icons written straight into the HTML (a `data:` link), which is why the tab can show
+an icon while Google shows a blank globe. To change the icon, replace those files (square, at least 48 px; the PNG is 192 px).
+After any change, Google takes days to weeks to notice: in Google Search Console, open **URL inspection**, enter
+`https://dhyans.space/` and press **Request indexing** to speed it up.
+
 ## Putting it online (free, ~5 minutes)
 
 ### Option A — GitHub Pages (recommended: you can edit from any browser)

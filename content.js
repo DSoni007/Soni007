@@ -158,8 +158,8 @@ window.PORTFOLIO = {
             alt: "An avionics sled: threaded rods and fiberglass plates holding a small battery and a green terminal block" },
           { src: "assets/goldeneye/10-gps-tracker.jpg",      caption: "GPS tracker and support boards",
             alt: "A GPS tracker with its antenna beside two small green circuit boards on a black surface" },
-          { src: "assets/goldeneye/11-airframe-hardware.jpg", caption: "Hardware detail on the airframe",
-            alt: "A close-up of a metal fitting with a hex-socket screw on a red composite tube" },
+          { src: "assets/goldeneye/11-airframe-hardware.jpg", caption: "Rail button",
+            alt: "A close-up of a rail button, a metal fitting with a hex-socket screw, on a red composite tube" },
         ],
 
         // A single photo instead of the video (used only when there is no video):
@@ -218,8 +218,8 @@ window.PORTFOLIO = {
         title: "Aluminum boat tail",
         summary:
           "Engineered a proprietary aluminum boat tail that improved Goldeneye's flight performance by 7–10%.",
-        image: "assets/projects/boat-tail-installed.jpg", imageAlt: "The aluminum boat tail fitted to the aft end of a dark composite airframe with a green fiberglass fin",
-        imageRatio: "16 / 10", imagePosition: "50% 52%",
+        image: "assets/projects/boat-tail-on-airframe.jpg", imageAlt: "The scuffed aluminum boat tail at the aft end of the red Goldeneye airframe, beside a red fin, on a workbench",
+        imageRatio: "16 / 10", imagePosition: "50% 50%",
         facts: [
           { label: "Flown on",         value: "Goldeneye · Launch Canada 2026" },
           { label: "Motor thrust",     value: "~250 kg" },
@@ -234,8 +234,8 @@ window.PORTFOLIO = {
         figures: [
           { src: "assets/projects/boat-tail-part.jpg",      ratio: "4 / 5", position: "50% 55%", caption: "The machined boat tail",
             alt: "A machined aluminum ring with a stepped, tapered profile standing on a wooden table" },
-          { src: "assets/projects/boat-tail-installed.jpg", ratio: "4 / 5", position: "50% 55%", caption: "Fitted to the airframe",
-            alt: "The aluminum boat tail at the aft end of a dark composite airframe, beside a green fiberglass fin on a workbench" },
+          { src: "assets/projects/boat-tail-on-airframe.jpg", ratio: "4 / 5", position: "50% 50%", caption: "Fitted to the airframe",
+            alt: "The scuffed aluminum boat tail at the aft end of the red Goldeneye airframe, beside a red fin, on a workbench" },
           { src: "assets/projects/boat-tail-cad.jpg",       ratio: "1308 / 1112", caption: "CAD model",
             alt: "A CAD render of the boat tail, a white tapered ring with a pale blue inner face" },
           { src: "assets/projects/boat-tail-section.jpg",   ratio: "1308 / 1112", caption: "CAD cross-section",
@@ -340,11 +340,11 @@ window.PORTFOLIO = {
 
       {
         kicker: "Fuel feed system",
-        title: "QD piston tail",
+        title: "QD PISTON SHAFT",
         summary:
           "The pneumatic piston that actuates the quick-disconnect on an ethanol fuel-feed system, " +
           "manufactured from 304 stainless steel entirely on manual machinery.",
-        image: "assets/projects/qd-piston.jpg", imageAlt: "A stainless steel piston with a threaded stud at each end, lying on dark textured leather",
+        image: "assets/projects/qd-piston.jpg", imageAlt: "A stainless steel piston shaft with a threaded stud at each end, lying on dark textured leather",
         imageRatio: "16 / 10", imagePosition: "50% 50%",
         facts: [
           { label: "System",        value: "Ethanol (C₂H₅OH) fuel feed" },
@@ -360,8 +360,8 @@ window.PORTFOLIO = {
           "The piston was manufactured from 304 stainless steel, entirely on manual machinery.",
         ],
         figures: [
-          { src: "assets/projects/qd-piston.jpg", wide: true, caption: "The QD piston",
-            alt: "A stainless steel piston with a threaded stud at each end, lying on dark textured leather" },
+          { src: "assets/projects/qd-piston.jpg", wide: true, caption: "QD Piston Shaft",
+            alt: "A stainless steel piston shaft with a threaded stud at each end, lying on dark textured leather" },
         ],
         tags: ["Manual machining", "GD&T", "Manual mill", "Manual lathe", "Inspection & QA"],
       },
