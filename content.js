@@ -22,7 +22,7 @@ window.PORTFOLIO = {
     name: "Dhyan Soni",
     shortName: "D. Soni",          // shown top-left and in the footer
     location: "Toronto, ON",
-    updated: "2026-09-20",         // shown as "REV" in the footer — bump it when you edit
+    updated: "2026-10-11",         // shown as "REV" in the footer — bump it when you edit
   },
 
   /* ---------- HERO (top of page) ---------------------------------- */
@@ -77,6 +77,32 @@ window.PORTFOLIO = {
     note: "Rocketry & aerospace projects",
     moreTitle: "More projects",   // heading of the section under Work that holds every other project
 
+    // THE FLIGHT RECORD: one card per rocket, right under the featured project. Edit the numbers here.
+    //   image    = a photo, kept in assets/fleet/ (a photo shown here shouldn't also be in the Goldeneye carousel)
+    //   position = which part of the photo stays in the crop ("50% 0%" keeps the top, "50% 100%" the bottom)
+    //   result   = leave "" and that row is simply hidden
+    // Set  show: false  to hide the whole block.
+    fleet: {
+      show: true,
+      kicker: "TFRA flight record",
+      title: "4 rockets. 2 years.",
+      note: "Proven, rapid, groundbreaking development pace.",
+      rockets: [
+        { name: "Goldeneye", launched: "August 2026",  apogee: "12,327 ft", speed: "Mach 1.17", result: "7th place",
+          image: "assets/fleet/goldeneye.jpg", position: "50% 60%",
+          alt: "Goldeneye lifting off, trailing a tall column of white smoke above the tree line" },
+        { name: "Spectre",   launched: "August 2025",  apogee: "10,147 ft", speed: "Mach 0.95", result: "11th place",
+          image: "assets/fleet/spectre.jpg", position: "50% 75%",
+          alt: "Four team members standing beside the orange Spectre rocket" },
+        { name: "Stallion",  launched: "March 2025",   apogee: "3,005 ft",  speed: "Mach 0.6",  result: "",
+          image: "assets/fleet/stallion.jpg", position: "50% 55%",
+          alt: "Team members crouched at the base of the Stallion rocket on a flat, muddy launch field" },
+        { name: "Vanguard",  launched: "January 2025", apogee: "1,100 ft",  speed: "Mach 0.3",  result: "",
+          image: "assets/fleet/vanguard.jpg", position: "50% 55%",
+          alt: "Two people on a snowy field handling the Vanguard rocket" },
+      ],
+    },
+
     projects: [
       // featured: true  →  the big block in the Work section. It stays put.
       // Every other project becomes a card in the More projects section right under it (a swipeable strip, in the
@@ -97,7 +123,9 @@ window.PORTFOLIO = {
         //   url: "https://..."    opens a normal link in a new tab
         facts: [
           { label: "Event",         value: "Launch Canada 2026" },
-          { label: "My scope",      value: "Hardware · Software · Project management" },
+          { label: "Launched",      value: "August 2026" },
+          { label: "Result",        value: "7th place" },
+          { label: "My scope",      value: "Everything: hardware, software and project management" },
           { label: "Documentation", value: "145-page design report",
             pdf: "assets/goldeneye/goldeneye-final-design-report.pdf", pdfTitle: "Goldeneye Final Design Report" },
         ],
@@ -118,25 +146,16 @@ window.PORTFOLIO = {
         //   alt     = what the photo shows, for screen readers
         //   caption = short label under the photo (optional, "" for none)
         // Photos appear in the order listed. Leave the list empty ([]) to hide the carousel.
+        // A photo that already appears in the portfolio section (the flight record or a project pop-up) is NOT repeated here.
         gallery: [
-          { src: "assets/goldeneye/01-launch.jpg",           caption: "Goldeneye lifting off",
-            alt: "Goldeneye lifting off, trailing a tall column of white smoke above the tree line" },
           { src: "assets/goldeneye/02-team.jpg",             caption: "The team at Launch Canada 2026",
             alt: "Seven team members posing together at Launch Canada 2026, one holding a red rocket nose cone" },
           { src: "assets/goldeneye/03-tracking.jpg",         caption: "Tracking a flight from the field",
             alt: "Team members on the launch field looking up, one holding a Yagi antenna and others holding phones and a radio" },
-          { src: "assets/goldeneye/04-on-the-rail.jpg",      caption: "On the launch rail",
-            alt: "A red rocket beside a launch rail, seen from below against a cloudy sky" },
           { src: "assets/goldeneye/05-prep-table.jpg",       caption: "Pre-flight prep at the launch site",
             alt: "A rocket lying on a table under a tent at the launch site, with paperwork and a red tag" },
-          { src: "assets/goldeneye/06-fin-fitting.jpg",      caption: "Fin and aft fitting on the airframe",
-            alt: "A dark composite airframe on a workbench with a green fiberglass fin and an aluminum ring at the aft end" },
-          { src: "assets/goldeneye/07-aluminum-part.jpg",    caption: "Machined aluminum part",
-            alt: "A tapered, machined aluminum part with a threaded end lying on a wooden workbench" },
           { src: "assets/goldeneye/08-avionics-sled.jpg",    caption: "Avionics sled",
             alt: "An avionics sled: threaded rods and fiberglass plates holding a small battery and a green terminal block" },
-          { src: "assets/goldeneye/09-avionics-board.jpg",   caption: "Avionics circuit board",
-            alt: "A green avionics circuit board with a microcontroller, an SD card slot and several connectors" },
           { src: "assets/goldeneye/10-gps-tracker.jpg",      caption: "GPS tracker and support boards",
             alt: "A GPS tracker with its antenna beside two small green circuit boards on a black surface" },
           { src: "assets/goldeneye/11-airframe-hardware.jpg", caption: "Hardware detail on the airframe",
@@ -154,32 +173,197 @@ window.PORTFOLIO = {
         links: [],
       },
 
+      // figures = photos, CAD and drawings shown in the pop-up (a project needs facts, highlights, figures or links to get one).
+      //   ratio    = crop shape ("4 / 3"); leave it out to show the whole picture, uncropped
+      //   position = which part stays in the crop ("50% 0%" keeps the top)
+      //   wide: true  makes the picture span the full width of the pop-up (good for drawings)
+      // The cards run in the order listed here.
+
       {
-        kicker: "Launch Canada 2025",
-        title: "Spectre",
+        kicker: "Instrumentation",
+        title: "Supersonic pitot tube",
         summary:
-          "Turner Fenton Rocketry's entry at Launch Canada 2025, launched to an apogee of 10,147 ft and a maximum velocity of Mach 0.95. " +
-          "The flight made the team the first Canadian high school to launch and recover a competition rocket.",
+          "Designed and manufactured an aluminum-carbon fiber pitot tube capable of functioning in supersonic flight. " +
+          "In flight it read Mach 1.17, within 0.85% of the flight computer's own estimate.",
+        image: "assets/projects/pitot-tube.jpg", imageAlt: "A machined aluminum pitot tube with a threaded end and a tapered shoulder, lying on a wooden workbench",
+        imageRatio: "16 / 10", imagePosition: "50% 50%",
         facts: [
-          { label: "Event",        value: "Launch Canada 2025 · Timmins, ON" },
-          { label: "Launched",     value: "August 19, 2025" },
-          { label: "Apogee",       value: "10,147 ft (3,092 m)" },
-          { label: "Max velocity", value: "Mach 0.95 (1,148 km/h)" },
-          { label: "Result",       value: "11th in Basic Launch" },
-          { label: "Recovery",     value: "Two sequential parachutes" },
-          { label: "My scope",     value: "Team lead · Avionics" },
+          { label: "Flown on",                 value: "Goldeneye · Launch Canada 2026" },
+          { label: "Measured velocity",        value: "Mach 1.17" },
+          { label: "Flight computer estimate", value: "Mach 1.16 (0.85% error)" },
+          { label: "Materials",                value: "Machined aluminum · carbon fiber" },
         ],
         highlights: [
-          "Competed against teams from 30 universities and placed 11th in the Basic Launch category.",
-          "Flew for just over a minute before its two sequential parachutes deployed, and was recovered about three hours later, suspended in the boreal forest.",
-          "The third rocket the team launched that year, after two Stallion flights.",
+          "Goldeneye was designed to maximize flight velocity. Rocket velocity is normally measured indirectly, with accelerometers (IMUs) on a flight computer; a pitot tube measures airspeed directly, by sensing the air pressure acting on the rocket.",
+          "Machined from aluminum and carbon fiber. To eliminate the need for complex internal channels, the design went through several redesigns to ensure it could be manufactured.",
+          "It functioned flawlessly in flight, measuring Mach 1.17 against the flight computer's estimate of Mach 1.16, a 0.85% error.",
         ],
-        tags: ["Avionics", "Parachute recovery", "Launch Canada"],
-        links: [
-          { label: "Peel District School Board release", url: "https://www.peelschools.org/news/NEWSRELEASETurnerFentonSecondarySchoolstudentsmakehistorywithSpectrerocketlaunch" },
-          { label: "inBrampton coverage", url: "https://www.insauga.com/brampton-rocket-club-students-first-in-canada-to-compete-against-universities/" },
-          { label: "Launch Canada results", url: "https://www.launchcanada.org/lc-2025-highlights" },
+        figures: [
+          { src: "assets/projects/pitot-tube.jpg",          ratio: "4 / 3", position: "50% 50%", caption: "Machined aluminum pitot tube section",
+            alt: "A machined aluminum pitot tube with a threaded end and a tapered shoulder, lying on a wooden workbench" },
+          { src: "assets/projects/pitot-on-rocket.jpg",     ratio: "4 / 3", position: "50% 38%", caption: "Goldeneye on the launch rail, pitot tube at the nose",
+            alt: "The red nose of Goldeneye beside a launch rail against a cloudy sky, with a thin spike at its tip" },
+          { src: "assets/projects/pitot-velocity.png",      wide: true, caption: "Vertical velocity against time, L2375 motor",
+            alt: "A line chart of vertical velocity rising steeply to a peak, then decaying slowly over the rest of the flight" },
+          { src: "assets/projects/pitot-drawing-aft.png",   wide: true, caption: "Engineering drawing · aft section",
+            alt: "A dimensioned engineering drawing of the pitot tube's aft section, with a threaded end and a tapered shoulder" },
+          { src: "assets/projects/pitot-drawing-fwd.png",   wide: true, caption: "Engineering drawing · forward section",
+            alt: "A dimensioned engineering drawing of the pitot tube's forward section, a slim tapered tip" },
         ],
+        tags: ["Machining", "Design-for-manufacturability", "Carbon fiber", "CAD", "GD&T", "Engineering drawings", "Supersonic"],
+      },
+
+      {
+        kicker: "Aerodynamics",
+        title: "Aluminum boat tail",
+        summary:
+          "Engineered a proprietary aluminum boat tail that improved Goldeneye's flight performance by 7–10%.",
+        image: "assets/projects/boat-tail-installed.jpg", imageAlt: "The aluminum boat tail fitted to the aft end of a dark composite airframe with a green fiberglass fin",
+        imageRatio: "16 / 10", imagePosition: "50% 52%",
+        facts: [
+          { label: "Flown on",         value: "Goldeneye · Launch Canada 2026" },
+          { label: "Motor thrust",     value: "~250 kg" },
+          { label: "Purpose",          value: "Primary thrust-transfer mechanism" },
+          { label: "Aerodynamic gain", value: "7–8% more efficient (less drag)" },
+        ],
+        highlights: [
+          "Goldeneye used an incredibly high-thrust motor, around 250 kg of thrust, which put tremendous stress on the vehicle.",
+          "The custom-designed boat tail served as the primary thrust-transfer mechanism.",
+          "At the same time it reduces drag, increasing the aerodynamic efficiency of the vehicle by 7–8%.",
+        ],
+        figures: [
+          { src: "assets/projects/boat-tail-part.jpg",      ratio: "4 / 5", position: "50% 55%", caption: "The machined boat tail",
+            alt: "A machined aluminum ring with a stepped, tapered profile standing on a wooden table" },
+          { src: "assets/projects/boat-tail-installed.jpg", ratio: "4 / 5", position: "50% 55%", caption: "Fitted to the airframe",
+            alt: "The aluminum boat tail at the aft end of a dark composite airframe, beside a green fiberglass fin on a workbench" },
+          { src: "assets/projects/boat-tail-cad.jpg",       ratio: "1308 / 1112", caption: "CAD model",
+            alt: "A CAD render of the boat tail, a white tapered ring with a pale blue inner face" },
+          { src: "assets/projects/boat-tail-section.jpg",   ratio: "1308 / 1112", caption: "CAD cross-section",
+            alt: "A cross-section of the boat tail in CAD, showing its wall profile and a pale blue inner groove" },
+        ],
+        tags: ["Machining", "Force analysis", "Aerodynamic analysis", "CAD", "GD&T", "Engineering drawings"],
+      },
+
+      {
+        kicker: "Avionics",
+        title: "Data-acquisition computer",
+        summary:
+          "The most complex flight computer the team has built. " +
+          "Designed and wired the avionics systems for three competition rockets: Stallion, Spectre and Goldeneye.",
+        image: "assets/projects/daq-board.jpg", imageAlt: "A green avionics circuit board with a microcontroller, an SD card slot and several connectors",
+        imageRatio: "16 / 10", imagePosition: "50% 45%",
+        facts: [
+          { label: "Architecture", value: "STM32 microcontroller" },
+          { label: "Sensors",      value: "IMU · barometer · magnetometer" },
+          { label: "Protocols",    value: "SPI · I²C · UART" },
+          { label: "Flight data",  value: "Nearly 800 MB recorded" },
+        ],
+        highlights: [
+          "The DAQ was the most complex flight computer that TFRA has manufactured. It featured an Inertial Measurement Unit (IMU), barometer, magnetometer, on-board power regulation and more.",
+          "It was based on STM32 microcontroller architecture and successfully recorded and stored nearly 800 MB of flight data.",
+          "The DAQ uses various communication protocols that are standard within the industry including: SPI, I²C, and UART.",
+          "Designed and wired the avionics systems for the team's three competition rockets: Stallion, Spectre and Goldeneye.",
+        ],
+        figures: [
+          { src: "assets/projects/daq-board.jpg", ratio: "4 / 3", position: "50% 45%", caption: "The data-acquisition computer (DAQ)",
+            alt: "A green circuit board with a large microcontroller, an SD card slot and several connectors on a white surface" },
+        ],
+        tags: ["PCB design", "Circuit design & troubleshooting", "Soldering (THT/SMD)", "STM32"],
+      },
+
+      {
+        kicker: "Avionics",
+        title: "Pitot tube board",
+        summary:
+          "The electrical system that acquires the pitot tube's data: two high-resolution pressure transducers, " +
+          "redundant data storage and a Teensy 3.2 (STM32-based microcontroller).",
+        image: "assets/projects/pitot-tube-board.jpg", imageAlt: "A hand holding a round green circuit board with a blue sensor module standing up from it, mounted in a red cylindrical housing",
+        imageRatio: "16 / 10", imagePosition: "50% 55%",
+        facts: [
+          { label: "Sensing",    value: "Two high-resolution pressure transducers" },
+          { label: "Storage",    value: "Redundant data storage" },
+          { label: "Controller", value: "Teensy 3.2 (STM32-based)" },
+        ],
+        highlights: [
+          "The pitot tube (PT) board was the electrical system responsible for acquiring data from the pitot tube.",
+          "It features two high-resolution pressure transducers, redundant data storage mechanisms and a Teensy 3.2 (STM32-based microcontroller).",
+        ],
+        figures: [
+          { src: "assets/projects/pitot-tube-board.jpg", ratio: "4 / 3", position: "50% 55%", caption: "The pitot tube board",
+            alt: "A hand holding a round green circuit board with a blue sensor module standing up from it, mounted in a red cylindrical housing" },
+        ],
+        tags: ["PCB design", "Circuit design & troubleshooting", "Soldering (THT/SMD)", "STM32"],
+      },
+
+      {
+        kicker: "Avionics",
+        title: "GNSS breakout board",
+        summary:
+          "A separate circuit board that interfaces with the DAQ and acquires the vehicle's real-time GPS position during flight. " +
+          "It pushed my soldering skills to their limits.",
+        facts: [
+          { label: "Interfaces with", value: "The DAQ" },
+          { label: "Purpose",         value: "Real-time GPS positioning in flight" },
+          { label: "Hardest part",    value: "Complex QFN (quad, flat, no-leads) packages" },
+        ],
+        highlights: [
+          "The GNSS breakout board was a separate circuit board that interfaces with the DAQ. Its purpose was to acquire the real-time GPS position of the vehicle during flight.",
+          "This circuit board pushed my soldering skills to its limits, as some components had a complex QFN (quad, flat, no-leads) package.",
+        ],
+        tags: ["PCB design", "Soldering (THT/SMD)", "QFN packages", "Troubleshooting"],
+      },
+
+      {
+        kicker: "Recovery",
+        title: "Pyrotechnic ejection system",
+        summary:
+          "Black powder-based pyrotechnic separation that reliably and predictably splits a rocket in flight to deploy its parachutes, " +
+          "backed by nearly a dozen ground tests.",
+        image: "assets/projects/ejection-test.jpg", imageAlt: "A red rocket airframe lying on grass in a backyard beside a shed, with white smoke near its middle",
+        imageRatio: "16 / 10", imagePosition: "50% 55%",
+        facts: [
+          { label: "Method",       value: "Black powder-based separation" },
+          { label: "Purpose",      value: "Parachute deployment · safe descent" },
+          { label: "Ground tests", value: "Nearly a dozen" },
+        ],
+        highlights: [
+          "All of my rockets required a way to reliably and predictably separate the vehicle during flight, in order to deploy parachutes and ensure a safe descent.",
+          "The most reliable method is black powder-based pyrotechnic separation: carefully igniting an explosive charge during flight to separate the vehicle.",
+          "The entire process required diligent design, constant attention to safety, and nearly a dozen ground tests of the system.",
+        ],
+        figures: [
+          { src: "assets/projects/ejection-test.jpg", wide: true, caption: "Ejection testing of Goldeneye",
+            alt: "A red rocket airframe lying on grass in a backyard beside a shed, with white smoke near its middle" },
+        ],
+        tags: ["Pyrotechnic design", "Circuit design & wiring", "Personnel safety", "Pyrotechnics handling"],
+      },
+
+      {
+        kicker: "Fuel feed system",
+        title: "QD piston tail",
+        summary:
+          "The pneumatic piston that actuates the quick-disconnect on an ethanol fuel-feed system, " +
+          "manufactured from 304 stainless steel entirely on manual machinery.",
+        image: "assets/projects/qd-piston.jpg", imageAlt: "A stainless steel piston with a threaded stud at each end, lying on dark textured leather",
+        imageRatio: "16 / 10", imagePosition: "50% 50%",
+        facts: [
+          { label: "System",        value: "Ethanol (C₂H₅OH) fuel feed" },
+          { label: "Function",      value: "Quick-disconnect from the vehicle" },
+          { label: "Pressure",      value: "300 PSI, pneumatic" },
+          { label: "Material",      value: "304 stainless steel" },
+          { label: "Manufacturing", value: "Entirely manual machinery" },
+        ],
+        highlights: [
+          "The fuel feed system for ethanol (C₂H₅OH) requires the use of a quick-disconnect (QD) system.",
+          "The QD allows the ground support equipment (GSE) and fuel-feed system to disconnect from the vehicle during the first few seconds of liftoff.",
+          "The QD fill-valve uses a pneumatic piston operating at 300 PSI to actuate the quick-disconnecting mechanism.",
+          "The piston was manufactured from 304 stainless steel, entirely on manual machinery.",
+        ],
+        figures: [
+          { src: "assets/projects/qd-piston.jpg", wide: true, caption: "The QD piston",
+            alt: "A stainless steel piston with a threaded stud at each end, lying on dark textured leather" },
+        ],
+        tags: ["Manual machining", "GD&T", "Manual mill", "Manual lathe", "Inspection & QA"],
       },
 
       {
@@ -231,46 +415,6 @@ window.PORTFOLIO = {
           "Next steps identified: more Y-axis range (mount its servo lower), a lighter and more compact design, and better print quality.",
         ],
         tags: ["Fusion 360", "3D printing", "Arduino", "Servo control", "Mechatronics"],
-      },
-
-      {
-        kicker: "Instrumentation",
-        title: "Supersonic pitot tube",
-        summary:
-          "Designed and manufactured an aluminum-carbon fiber pitot tube capable of functioning in supersonic flight.",
-        highlights: [],
-        tags: ["Aluminum", "Carbon fiber", "Supersonic"],
-        image: "", imageAlt: "", links: [],
-      },
-
-      {
-        kicker: "Aerodynamics",
-        title: "Aluminum boat tail",
-        summary:
-          "Engineered a proprietary aluminum boat tail that improved Goldeneye's flight performance by 7–10%.",
-        highlights: [],
-        tags: ["Aluminum", "Design-for-manufacturability", "Flight performance"],
-        image: "", imageAlt: "", links: [],
-      },
-
-      {
-        kicker: "Avionics",
-        title: "Flight avionics",
-        summary:
-          "Designed and wired the avionics systems for three competition rockets: Stallion, Spectre and Goldeneye.",
-        highlights: [],
-        tags: ["Avionics", "Wiring", "3 flight vehicles"],
-        image: "", imageAlt: "", links: [],
-      },
-
-      {
-        kicker: "Manufacturing",
-        title: "Composite airframes",
-        summary:
-          "Constructed four competition-level rockets using industry-standard composite manufacturing processes.",
-        highlights: [],
-        tags: ["Composite fabrication", "Wet layups", "4 flight vehicles"],
-        image: "", imageAlt: "", links: [],
       },
 
       // TEMPLATE: copy the block below, delete the "//" at the start of each
@@ -379,10 +523,12 @@ window.PORTFOLIO = {
     title: "Skills",
     groups: [
       { label: "CAD & Design",  items: ["SolidWorks", "OnShape", "Fusion 360", "CATIA", "GD&T", "Engineering Drawings", "Design-for-Manufacturability", "OpenRocket"] },
-      { label: "Manufacturing", items: ["Composite Fabrication", "Wet Layups", "CNC Operation", "CMM Operation (ZEISS CALYPSO)"] },
-      { label: "Quality",       items: ["Shadowgraph / Caliper / Micrometer Inspection"] },
-      { label: "Electrical",    items: ["Circuit Assembly", "Soldering (SMT/THT)", "PCB Design (Autodesk Eagle, KiCAD)"] },
-      { label: "Programming",   items: ["Python", "Arduino", "C++"] },
+      { label: "Analysis",      items: ["Engineering Force Analysis", "Aerodynamic Analysis"] },
+      { label: "Manufacturing", items: ["Machining", "Manual Mill & Lathe", "Composite Fabrication", "Wet Layups", "CNC Operation", "CMM Operation (ZEISS CALYPSO)"] },
+      { label: "Quality",       items: ["Shadowgraph / Caliper / Micrometer Inspection", "Inspection & QA"] },
+      { label: "Electrical",    items: ["Circuit Design & Troubleshooting", "Circuit Design & Wiring", "Circuit Assembly", "Soldering (SMT/THT)", "PCB Design (Autodesk Eagle, KiCAD)"] },
+      { label: "Pyrotechnics",  items: ["Pyrotechnic Design", "Pyrotechnics Handling", "Personnel Safety"] },
+      { label: "Programming",   items: ["Python", "Arduino", "C++", "STM32 Microcontrollers"] },
     ],
   },
 

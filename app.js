@@ -101,7 +101,7 @@
           x.intro ? h("p", { class: "intro", text: x.intro }) : null,
           h("div", { class: "actions" }, [
             hasContact ? h("button", { class: "btn btn-primary", type: "button", "data-contact-open": "1", "aria-haspopup": "dialog" }, ["Get in touch"]) : null,
-            C.work && C.work.show !== false ? h("a", { class: "btn", href: "#work" }, ["See the work"]) : null,
+            C.work && C.work.show !== false ? h("a", { class: "btn", href: otherProjects().length ? "#projects" : "#work" }, ["See the work"]) : null,
             x.extraButton && x.extraButton.url
               ? h("a", { class: "btn", href: safeUrl(x.extraButton.url), target: "_blank", rel: "noopener" }, [x.extraButton.label || "Learn more"])
               : null,
@@ -363,7 +363,33 @@
   // "See more" arrow, which opens all of it in a pop-up, so the page itself never grows.
   var detailProjects = [];                 // the projects that have a pop-up; each card's button points into this list
   function hasDetails(p) {
-    return !!((p.facts && p.facts.length) || (p.highlights && p.highlights.length) || (p.links && p.links.length));
+    return !!((p.facts && p.facts.length) || (p.highlights && p.highlights.length) || (p.sections && p.sections.length) || (p.figures && p.figures.length) || (p.links && p.links.length));
+  }
+
+  // A project made of several parts gets titled blocks in its pop-up: a heading, some paragraphs, and optional figures.
+  function sectionBlocks(items) {
+    var s = (items || []).filter(function (x) { return x && x.title; });
+    if (!s.length) return null;
+    return h("div", { class: "proj-secs" }, s.map(function (x) {
+      var kids = [h("h3", { text: x.title })];
+      (x.paragraphs || []).forEach(function (t) { kids.push(h("p", { text: t })); });
+      kids.push(figureGrid(x.figures));
+      return h("section", { class: "proj-sec" }, kids);
+    }));
+  }
+
+  // Photos, CAD and drawings shown in the pop-up. Each can set its own crop (ratio / position); a drawing with
+  // no ratio is shown whole, and `wide: true` lets a picture span the full width of the pop-up.
+  function figureGrid(items) {
+    var g = (items || []).filter(function (it) { return it && it.src; });
+    if (!g.length) return null;
+    return h("div", { class: "proj-figs" }, g.map(function (it) {
+      var style = it.ratio ? "aspect-ratio:" + cropValue(it.ratio, "4 / 3") + ";object-position:" + cropValue(it.position, "50% 50%") : null;
+      return h("figure", { class: "proj-fig" + (it.wide ? " wide" : "") }, [
+        h("img", { src: safeUrl(it.src), alt: it.alt || "", loading: "lazy", decoding: "async", style: style }),
+        it.caption ? h("figcaption", { text: it.caption }) : null,
+      ]);
+    }));
   }
 
   function card(p) {
@@ -386,6 +412,34 @@
     return w && w.show !== false ? (w.projects || []).filter(function (p) { return !p.featured; }) : [];
   }
 
+  // FLIGHT RECORD: one small card per rocket (photo, name, and a few numbers), under the featured project.
+  function fleet() {
+    var f = C.work && C.work.fleet;
+    var rockets = f && f.show !== false ? (f.rockets || []).filter(function (r) { return r && r.name; }) : [];
+    if (!rockets.length) return null;
+    var rows = [["Launched", "launched"], ["Apogee", "apogee"], ["Max speed", "speed"], ["Result", "result"]];
+    return h("section", { class: "fleet", "aria-label": f.title || "Flight record" }, [
+      h("div", { class: "fleet-head" }, [
+        f.kicker ? h("p", { class: "kicker", text: f.kicker }) : null,
+        h("h3", { text: f.title || "Flight record" }),
+        f.note ? h("p", { class: "fleet-note", text: f.note }) : null,
+      ]),
+      h("ul", { class: "fleet-grid" }, rockets.map(function (r) {
+        return h("li", { class: "rocket" + (r.image ? "" : " no-img") }, [
+          r.image
+            ? h("figure", { class: "media" }, [
+                h("img", { src: safeUrl(r.image), alt: r.alt || "", loading: "lazy", decoding: "async", style: "object-position:" + cropValue(r.position, "50% 50%") }),
+              ])
+            : null,
+          h("h4", { text: r.name }),
+          h("dl", { class: "rocket-facts" }, rows.filter(function (x) { return r[x[1]]; }).map(function (x) {
+            return h("div", {}, [h("dt", { text: x[0] }), h("dd", { text: r[x[1]] })]);
+          })),
+        ]);
+      })),
+    ]);
+  }
+
   // WORK: the featured block, which stays put. Beside its heading, a link down to the More projects section,
   // so nobody stops reading after the big block without knowing there is more.
   function work() {
@@ -399,6 +453,7 @@
       : w.note;
     var kids = [heading(w.title || "Work", note)];
     (w.projects || []).forEach(function (p) { if (p.featured) kids.push(feature(p)); });
+    var record = fleet(); if (record) kids.push(record);
     return section("work", "", kids);
   }
 
@@ -437,7 +492,7 @@
       [
         h("h2", { id: "project-dialog-title", text: p.title }),
         p.summary ? h("p", { class: "lede", text: p.summary }) : null,
-        factList(p.facts), list(p.highlights, "dash"), tags(p.tags), linkButtons(p.links),
+        factList(p.facts), list(p.highlights, "dash"), sectionBlocks(p.sections), figureGrid(p.figures), tags(p.tags), linkButtons(p.links),
       ].forEach(function (n) { if (n) body.appendChild(n); });
       dlg.showModal();
       dlg.scrollTop = 0;

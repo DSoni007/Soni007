@@ -49,7 +49,7 @@ body {
 }
 a { color: inherit; }
 img { max-width: 100%; height: auto; display: block; }
-h1, h2, h3, p, ul, dl, dd, figure { margin: 0; }
+h1, h2, h3, h4, p, ul, dl, dd, figure { margin: 0; }
 ul { padding: 0; list-style: none; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
@@ -236,6 +236,35 @@ a.fact-link::after { content: "Open"; }
 .fact-link:hover { color: var(--accent); }
 
 .feature + .feature { margin-top: clamp(14px, 2vw, 20px); }
+
+/* ---------- FLIGHT RECORD: one card per rocket, under the featured project ---------- */
+.fleet { margin-top: clamp(36px, 5.5vw, 64px); }
+.fleet-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem 1rem;
+  padding-bottom: .7rem; margin-bottom: clamp(14px, 2.2vw, 22px); border-bottom: 1px solid var(--ink);
+}
+.fleet-head .kicker { flex-basis: 100%; }
+.fleet-head h3 { font: 800 clamp(1.8rem, 3.6vw, 2.5rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.fleet-note { margin-left: auto; font: 500 .74rem var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+@media (max-width: 640px) { .fleet-note { margin-left: 0; flex-basis: 100%; } }
+.fleet-grid { display: grid; gap: clamp(10px, 1.6vw, 16px); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rocket { display: flex; flex-direction: column; gap: .75rem; min-width: 0; padding: clamp(12px, 1.6vw, 16px); background: var(--surface); border: 1px solid var(--line); }
+.rocket .media img { aspect-ratio: 4 / 5; }
+.rocket h4 { font: 700 clamp(1.7rem, 2.8vw, 2.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.rocket-facts { border-top: 1px solid var(--ink); }   /* top-aligned, so the rows line up across all four cards like a table */
+.rocket-facts > div { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
+.rocket-facts > div:last-child { border-bottom: 0; padding-bottom: 0; }
+.rocket-facts dt { font: 500 .64rem var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2); }
+.rocket-facts dd { font: 700 1.15rem/1.1 var(--f-display); letter-spacing: .02em; text-transform: uppercase; text-align: right; white-space: nowrap; }
+@media (max-width: 920px) { .fleet-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) {   /* phone: photo on the left, name and numbers on the right, one rocket per row */
+  .fleet-grid { grid-template-columns: minmax(0, 1fr); }
+  .rocket { display: grid; grid-template-columns: 104px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 14px; row-gap: .5rem; }
+  .rocket .media { grid-row: 1 / -1; grid-column: 1; }
+  .rocket h4, .rocket-facts { grid-column: 2; }
+  .rocket-facts { margin-top: 0; }
+  .rocket.no-img h4, .rocket.no-img .rocket-facts { grid-column: 1 / -1; }
+}
 .card { display: flex; flex-direction: column; gap: .7rem; padding: clamp(18px, 2.4vw, 26px); background: var(--surface); border: 1px solid var(--line); }
 .card h3 { font: 700 clamp(1.6rem, 2.6vw, 2rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
 .card .tags { margin-top: auto; padding-top: .6rem; }
@@ -398,6 +427,18 @@ html.dlg-open { overflow: hidden; }
 .proj-body .facts dd { text-transform: none; }   /* keep units readable: "3,092 m", not "3,092 M" */
 .proj-body .dash { max-width: 74ch; }
 .proj-body .actions { margin-top: 0; }
+/* titled parts of a project (e.g. the DAQ, the pitot tube board, the GNSS board) */
+.proj-secs { display: grid; gap: 1.5rem; }
+.proj-sec { display: grid; gap: .8rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.proj-sec h3 { font: 700 1.55rem/1.05 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.proj-sec p { max-width: 68ch; }
+/* photos, CAD and drawings: two across, a "wide" one spans the pop-up, one column on a phone */
+.proj-figs { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+@media (max-width: 560px) { .proj-figs { grid-template-columns: minmax(0, 1fr); } }
+.proj-fig { display: grid; gap: .45rem; margin: 0; min-width: 0; }
+.proj-fig.wide { grid-column: 1 / -1; }
+.proj-fig img { width: 100%; height: auto; object-fit: cover; background: var(--grid); border: 1px solid var(--line); }
+.proj-fig figcaption { font: 500 .72rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
 @media (max-width: 640px) { .proj-dlg { width: 100%; max-height: none; height: 100vh; height: 100dvh; margin: 0; border: 0; } }
 
 /* ---------- PDF READER (the preview window) ---------- */

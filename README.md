@@ -36,8 +36,26 @@ It joins the *More projects* section automatically.
 project is a card in the *More projects* section right under it: a band of its own with a big heading, a "Projects" link in the
 top menu, and a "7 more projects ↓" link beside the Work heading, so nobody scrolls past it. The cards sit in a swipeable strip,
 in the order listed; the arrows, swiping, scrolling and the arrow keys all move it. Change the heading with `work.moreTitle`.
-A card that has `facts`, `highlights` or `links` gets a "See more" arrow, and clicking it opens all of that in a pop-up.
+A card that has `facts`, `highlights`, `figures` or `links` gets a "See more" arrow, and clicking it opens all of that in a pop-up.
 A card with only a summary and tags has no arrow.
+
+**The flight record** ("4 rockets. 2 years.") — the row of rocket cards under Goldeneye is `work.fleet`. Each rocket has a
+`name`, `launched`, `apogee`, `speed` and `result` (leave `result: ""` and that row hides), plus an `image` and `alt`.
+Add a rocket by copying one line in `rockets`; put its photo in `assets/fleet/`. `position` picks which part of the photo stays
+in the crop. `fleet: { show: false }` hides the block.
+
+**Photos, CAD and drawings in a project pop-up** — give a project a `figures` list:
+`{ src: "assets/projects/x.jpg", caption: "…", alt: "…" }`. They sit two across in the pop-up. Add `wide: true` to span the
+full width (right for drawings and charts), `ratio: "4 / 3"` to crop to a shape (leave it out to show the whole picture), and
+`position: "50% 0%"` to choose what stays in the crop. Keep each image under ~500 KB, and strip phone GPS data first.
+A project made of several parts (like the avionics: DAQ, pitot tube board, GNSS board) can instead use `sections`, a list of
+`{ title, paragraphs: ["…"], figures: [ … ] }`, which become titled blocks in the pop-up.
+
+**Order of the cards** — the cards in More projects run in the order they are listed in `projects`. The hero's "See the work"
+button jumps to More projects.
+
+**One photo, one place** — a photo that appears in the portfolio section (the flight record or a project pop-up) should not
+also be in the Goldeneye carousel. When you add a photo to a project, take it out of `gallery` (and vice versa).
 
 **Add a photo to a project**
 1. Put the image in the `assets/` folder (e.g. `assets/goldeneye.jpg`; keep it under ~500 KB).
@@ -84,6 +102,20 @@ window on the page (no download); use `url:` instead of `pdf:` for a normal link
 `contact.resume`. **Use a résumé copy without your phone number** — this site is public.
 
 **Bump the revision** — change `site.updated` (it appears in the footer title block).
+
+## The engineering-portfolio PDF (`portfolio-pdf/`)
+
+The portfolio PDF follows **the Google Doc's pages, text and tables** (same 9 pages and order), styled with this site's fonts
+and colours, in a dark version for screens and a light version for printing. The cover is the website's hero (grid, name,
+round headshot, one "Visit my website" button, title block); the photos sit in aligned grids with captions rather than overlapping. It lives in
+`portfolio-pdf/`: `portfolio.html` holds the text and where everything sits (text positions are in points, measured from the
+original PDF), `pdf.css` the look, `img/` the photos at full quality.
+To rebuild after an edit, run `./portfolio-pdf/build.sh` (needs Google Chrome and an internet connection for the fonts); the
+PDFs land in `portfolio-pdf/out/`. To add a page, copy a whole `<section class="page">` block, change its text, and add it to
+the table of contents on page 2 (page numbers there are typed in by hand).
+
+**This folder is deliberately left out of the published site** (see `.gitignore`): the PDF includes a phone number, and this
+repo is public. Don't remove that line.
 
 If the page shows a red "couldn't be built" box, you've missed a comma or a quote. Undo your
 last edit, or look near it for a line that's missing its trailing `,`.

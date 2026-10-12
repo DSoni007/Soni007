@@ -1,0 +1,5 @@
+# The engineering-portfolio PDF (source and output) stays on this computer.
+# It includes a phone number, and this repo is published as a public website.
+portfolio-pdf/
+
+.DS_Store
